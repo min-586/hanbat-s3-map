@@ -3,37 +3,69 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>한밭대 전체 캠퍼스 지도 & 강의실 길잡이</title>
+  <title>국립한밭대학교 S3 층별 평면도 길잡이</title>
   <style>
-    /* 리셋 및 기본 모바일 스타일 (360px 모바일 화면 기준) */
+    /* ========================================================
+       1. 디자인 시스템 & 반응형 모바일 레이아웃 (360px 최적화)
+       ======================================================== */
+    :root {
+      --primary: #2563eb;
+      --primary-light: #eff6ff;
+      --primary-border: #93c5fd;
+      --accent: #f59e0b;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-sub: #64748b;
+      --border: #e2e8f0;
+      --room-lecture: #eff6ff;
+      --room-lecture-border: #93c5fd;
+      --room-lab: #ecfdf5;
+      --room-lab-border: #6ee7b7;
+      --room-core: #fef3c7;
+      --room-core-border: #fcd34d;
+      --room-rest: #fff1f2;
+      --room-rest-border: #fecdd3;
+      --room-special: #f5f3ff;
+      --room-special-border: #c4b5fd;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
     }
+
     body {
+      width: 100%;
+      min-height: 100vh;
+      background-color: #cbd5e1;
       font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Segoe UI", Roboto, sans-serif;
-      background-color: #f1f5f9;
-      color: #1e293b;
+      color: var(--text-main);
       display: flex;
       justify-content: center;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-    #app-container {
-      width: 100%;
-      max-width: 440px;
-      min-width: 320px;
-      background-color: #ffffff;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      position: relative;
+      align-items: flex-start;
+      padding: 0;
+      margin: 0;
     }
 
-    /* 상단 테스트 컨트롤 바 */
+    /* 360px ~ 430px 모바일 화면 프레임 */
+    #app {
+      width: 100%;
+      max-width: 430px;
+      min-height: 100vh;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+      overflow-x: hidden;
+    }
+
+    /* ========================================================
+       2. 상단 AGENTS.md 테스트 컨트롤 바
+       ======================================================== */
     .test-control-bar {
       background-color: #0f172a;
       color: #f8fafc;
@@ -41,52 +73,58 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 12px;
-      font-weight: 500;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      font-size: 11px;
+      font-weight: 700;
+      z-index: 1000;
+      border-bottom: 1px solid #1e293b;
     }
     .test-badge {
-      background-color: #334155;
-      padding: 2px 7px;
+      background: #0284c7;
+      color: #fff;
+      padding: 2px 6px;
       border-radius: 4px;
-      font-size: 11px;
-      color: #94a3b8;
+      font-size: 10px;
+      font-weight: 800;
     }
     .test-btn-group {
       display: flex;
       gap: 6px;
     }
     .btn-test {
-      background-color: #2563eb;
+      background: #0369a1;
       color: #ffffff;
       border: none;
-      padding: 5px 9px;
+      padding: 4px 8px;
       border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 11px;
+      font-weight: 700;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
     }
     .btn-test:active {
-      transform: scale(0.96);
+      transform: scale(0.95);
     }
     .btn-test-reset {
-      background-color: #ef4444;
+      background: #dc2626;
     }
 
-    /* 앱 헤더 */
+    /* ========================================================
+       3. 메인 헤더 & 검색 바
+       ======================================================== */
     .app-header {
-      padding: 14px 16px 10px;
-      border-bottom: 1px solid #f1f5f9;
+      background: #ffffff;
+      padding: 12px 14px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .header-title-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 10px;
     }
-    .app-header h1 {
+    .app-title {
       font-size: 17px;
       font-weight: 800;
       color: #0f172a;
@@ -94,2072 +132,1344 @@
       align-items: center;
       gap: 6px;
     }
+    .app-sub {
+      font-size: 11.5px;
+      color: var(--text-sub);
+      font-weight: 600;
+    }
     .today-pill {
-      font-size: 12px;
-      font-weight: 700;
-      background-color: #eff6ff;
-      color: #2563eb;
-      padding: 4px 10px;
-      border-radius: 20px;
-      border: 1px solid #bfdbfe;
+      background: #dbeafe;
+      color: #1e40af;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 800;
     }
 
-    /* 메인 스크롤 콘텐츠 */
-    .content-area {
-      flex: 1;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      overflow-y: auto;
-    }
-
-    /* 1. 검색창 및 즐겨찾기 바 */
-    .search-section {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+    /* 강의실 빠른 검색 */
     .search-box {
-      position: relative;
       display: flex;
-      align-items: center;
+      gap: 6px;
+      position: relative;
     }
     .search-input {
-      width: 100%;
-      height: 44px;
-      padding: 10px 38px 10px 14px;
-      border: 1.5px solid #cbd5e1;
+      flex: 1;
+      padding: 8px 12px 8px 34px;
       border-radius: 12px;
-      font-size: 14px;
+      border: 1.5px solid #cbd5e1;
+      background: #f8fafc;
+      font-size: 13px;
+      font-weight: 600;
+      color: #0f172a;
       outline: none;
-      background-color: #f8fafc;
-      transition: all 0.2s;
+      transition: border-color 0.2s;
     }
     .search-input:focus {
-      border-color: #2563eb;
-      background-color: #ffffff;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      border-color: var(--primary);
+      background: #ffffff;
     }
-    .search-clear-btn {
+    .search-icon {
       position: absolute;
-      right: 12px;
-      background: none;
-      border: none;
-      font-size: 16px;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
       color: #94a3b8;
-      cursor: pointer;
-      display: none;
     }
-
-    /* 검색 자동완성 드롭다운 */
-    .search-dropdown {
-      position: absolute;
-      top: 48px;
-      left: 0;
-      right: 0;
-      background-color: #ffffff;
-      border: 1px solid #e2e8f0;
+    .search-btn {
+      padding: 0 14px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
       border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-      max-height: 240px;
-      overflow-y: auto;
-      z-index: 50;
-      display: none;
-    }
-    .search-dropdown-item {
-      padding: 11px 14px;
-      border-bottom: 1px solid #f1f5f9;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 13px;
-    }
-    .search-dropdown-item:active {
-      background-color: #eff6ff;
-    }
-    .search-item-title {
+      font-size: 12.5px;
       font-weight: 700;
-      color: #1e293b;
-    }
-    .search-item-sub {
-      font-size: 11px;
-      color: #64748b;
+      cursor: pointer;
     }
 
-    /* 즐겨찾기 퀵 칩 */
-    .favorites-scroll {
+    /* 최근 검색 칩 목록 */
+    .recent-chips-bar {
       display: flex;
       gap: 6px;
       overflow-x: auto;
-      padding-bottom: 2px;
+      padding: 8px 14px 4px;
       scrollbar-width: none;
     }
-    .favorites-scroll::-webkit-scrollbar {
+    .recent-chips-bar::-webkit-scrollbar {
       display: none;
     }
-    .fav-chip {
-      background-color: #f8fafc;
-      border: 1px solid #e2e8f0;
-      color: #334155;
-      padding: 5px 10px;
-      border-radius: 20px;
+    .recent-chip {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      padding: 3px 8px;
+      border-radius: 14px;
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 700;
+      color: #475569;
       white-space: nowrap;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      flex-shrink: 0;
+      gap: 3px;
     }
-    .fav-chip:active {
-      background-color: #dbeafe;
-      border-color: #93c5fd;
-    }
-    .fav-chip.active {
-      background-color: #2563eb;
-      color: #ffffff;
-      border-color: #2563eb;
+    .recent-chip:active {
+      background: #f1f5f9;
     }
 
-    /* 캠퍼스 구역 선택 필터 탭 (전체 / N동 북측 / S동 남측 / D동 기숙사) */
-    .zone-filter-bar {
+    /* ========================================================
+       4. 층수 퀵 셀렉터 (1F ~ 7F 탭)
+       ======================================================== */
+    .floor-tabs-wrapper {
+      background: #ffffff;
+      padding: 6px 10px 8px;
+      border-bottom: 1px solid var(--border);
       display: flex;
       gap: 5px;
-      background-color: #e2e8f0;
-      padding: 3px;
-      border-radius: 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
     }
-    .zone-filter-btn {
+    .floor-tabs-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+    .floor-tab-btn {
       flex: 1;
+      min-width: 44px;
+      padding: 8px 4px;
       text-align: center;
-      padding: 6px 0;
-      font-size: 11px;
-      font-weight: 700;
-      color: #475569;
-      border-radius: 7px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #64748b;
       cursor: pointer;
-      border: none;
-      background: none;
-      transition: all 0.15s;
+      transition: all 0.15s ease;
     }
-    .zone-filter-btn.active {
-      background-color: #ffffff;
-      color: #2563eb;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    .floor-tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 3px 8px rgba(37, 99, 235, 0.3);
+      transform: translateY(-1px);
     }
 
-    /* 4. 인터랙티브 캠퍼스 맵 */
-    .map-card {
-      background-color: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 12px;
+    /* ========================================================
+       5. 출발 위치 셀렉터 & 친절한 방향 안내 배너
+       ======================================================== */
+    .start-loc-card {
+      background: #ffffff;
+      margin: 10px 12px 6px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
       display: flex;
-      flex-direction: column;
+      align-items: center;
       gap: 8px;
     }
-    .map-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12px;
-      color: #64748b;
-      font-weight: 600;
+    .start-loc-label {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #475569;
+      white-space: nowrap;
     }
-    .map-viewport {
-      width: 100%;
-      height: 280px;
-      background-color: #e2e8f0;
-      border-radius: 12px;
-      overflow: auto;
-      position: relative;
-      touch-action: pan-x pan-y;
+    .start-loc-select {
+      flex: 1;
+      padding: 6px 8px;
+      border-radius: 8px;
       border: 1px solid #cbd5e1;
-      scrollbar-width: thin;
-    }
-    .campus-svg {
-      width: 700px;
-      height: 520px;
-      display: block;
-      user-select: none;
-    }
-
-    /* SVG 건물 및 출입구 스타일 */
-    .map-bldg {
-      fill: #ffffff;
-      stroke: #64748b;
-      stroke-width: 1.5;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .map-bldg:hover, .map-bldg:active {
-      fill: #dbeafe;
-      stroke: #2563eb;
-    }
-    .map-bldg.selected {
-      fill: #bfdbfe !important;
-      stroke: #1d4ed8;
-      stroke-width: 3;
-      filter: drop-shadow(0 2px 6px rgba(37, 99, 235, 0.4));
-    }
-    .bldg-label {
-      font-size: 8.5px;
-      font-weight: 800;
-      fill: #0f172a;
-      pointer-events: none;
-      text-anchor: middle;
-      dominant-baseline: central;
-    }
-    .bldg-code {
-      font-size: 7.5px;
+      font-size: 12px;
       font-weight: 700;
-      fill: #2563eb;
-      pointer-events: none;
-      text-anchor: middle;
+      color: #0f172a;
+      background: #f8fafc;
+      outline: none;
     }
 
-    /* 출입구 핀 마커 */
-    .pin-group {
-      pointer-events: none;
-      animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    @keyframes popIn {
-      0% { transform: scale(0); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    /* 선택된 건물 컴팩트 미니 바 (평소 지도 중심 뷰 유지) */
-    .bldg-mini-bar {
-      background-color: #ffffff;
-      border: 1.5px solid #bfdbfe;
+    /* 학생 눈높이 방향 안내 배너 */
+    .guide-banner {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: #ffffff;
+      margin: 0 12px 10px;
+      padding: 10px 14px;
       border-radius: 14px;
-      padding: 12px;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
       display: flex;
-      flex-direction: column;
+      align-items: center;
       gap: 10px;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+      animation: fadeIn 0.3s ease;
     }
-    .bldg-mini-top {
+    .guide-icon-box {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .guide-text-box {
+      flex: 1;
+    }
+    .guide-target-room {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #fef08a;
+      margin-bottom: 2px;
+    }
+    .guide-instruction {
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.35;
+      color: #f8fafc;
+    }
+
+    /* ========================================================
+       6. 인터랙티브 파스텔 SVG 평면도 뷰어
+       ======================================================== */
+    .map-container {
+      margin: 0 12px 10px;
+      background: #ffffff;
+      border-radius: 18px;
+      border: 1.5px solid var(--border);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+      padding: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+    .map-header-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 8px;
+      padding: 0 4px;
     }
-    .bldg-name-row {
+    .map-floor-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #0f172a;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
-    .bldg-code-tag {
-      font-size: 11px;
-      font-weight: 800;
-      color: #2563eb;
-      background-color: #eff6ff;
-      padding: 2px 7px;
-      border-radius: 6px;
-      width: fit-content;
-    }
-    .bldg-zone-tag {
+    .map-legend {
+      display: flex;
+      gap: 8px;
       font-size: 10px;
       font-weight: 700;
       color: #64748b;
-      background-color: #f1f5f9;
-      padding: 2px 6px;
-      border-radius: 4px;
     }
-    .bldg-name-text {
-      font-size: 15px;
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+    }
+
+    .svg-floor-canvas {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: #fafafa;
+      border-radius: 12px;
+      touch-action: pan-y;
+    }
+
+    /* SVG 룸 인터랙션 */
+    .svg-room {
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .svg-room:hover {
+      filter: brightness(0.95);
+    }
+    .svg-room.selected {
+      stroke: #2563eb !important;
+      stroke-width: 3.5px !important;
+      filter: drop-shadow(0 0 6px rgba(37, 99, 235, 0.5));
+    }
+    .svg-room-label {
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+      font-size: 9.5px;
+      font-weight: 800;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* 실내 동선 애니메이션 점선 */
+    .guide-path-line {
+      stroke: #2563eb;
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 6 5;
+      animation: dashMove 1s linear infinite;
+      filter: drop-shadow(0 0 4px rgba(37, 99, 235, 0.6));
+    }
+    @keyframes dashMove {
+      from { stroke-dashoffset: 22; }
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* 출발 위치 마커 펄스 */
+    .start-pulse-dot {
+      fill: #f59e0b;
+      stroke: #ffffff;
+      stroke-width: 2.5;
+      animation: pulseAnim 1.4s ease-in-out infinite;
+    }
+    @keyframes pulseAnim {
+      0% { r: 5; opacity: 1; }
+      50% { r: 9; opacity: 0.7; }
+      100% { r: 5; opacity: 1; }
+    }
+
+    /* ========================================================
+       7. 강의실 상세 바텀시트 / 정보 카드
+       ======================================================== */
+    .room-detail-card {
+      background: #ffffff;
+      margin: 0 12px 10px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      animation: slideUp 0.25s ease;
+    }
+    .detail-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    .detail-badge-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .detail-room-name {
+      font-size: 16px;
       font-weight: 800;
       color: #0f172a;
     }
-    .btn-fav-toggle {
+    .detail-type-badge {
+      background: #eff6ff;
+      color: #2563eb;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 10.5px;
+      font-weight: 700;
+    }
+    .btn-fav-star {
       background: none;
       border: none;
       font-size: 22px;
       cursor: pointer;
       color: #cbd5e1;
       padding: 0 4px;
-      line-height: 1;
-      transition: transform 0.15s;
+      transition: color 0.15s;
     }
-    .btn-fav-toggle:active {
-      transform: scale(1.2);
-    }
-    .btn-fav-toggle.active {
+    .btn-fav-star.active {
       color: #f59e0b;
     }
 
-    /* 팝업 활성화 액션 버튼 그룹 */
-    .bldg-action-btn-group {
-      display: flex;
-      gap: 8px;
-    }
-    .btn-action-trigger {
-      flex: 1;
-      height: 40px;
-      border: 1.5px solid #cbd5e1;
-      background-color: #f8fafc;
-      color: #1e293b;
+    .detail-direction-guide {
+      background: #f8fafc;
       border-radius: 10px;
+      padding: 8px 10px;
       font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      transition: all 0.15s;
-    }
-    .btn-action-trigger:active {
-      transform: scale(0.97);
-    }
-    .btn-action-trigger.primary {
-      background-color: #eff6ff;
-      border-color: #93c5fd;
-      color: #1d4ed8;
+      color: #334155;
+      line-height: 1.45;
+      border-left: 3.5px solid var(--primary);
+      margin-bottom: 8px;
     }
 
-    /* 모달 공통 스타일 */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: rgba(15, 23, 42, 0.65);
-      backdrop-filter: blur(2px);
-      display: none;
-      justify-content: center;
-      align-items: flex-end; /* 모바일 바텀시트 느낌 */
-      z-index: 1000;
-      padding: 0;
-    }
-    .modal-overlay.active {
-      display: flex;
-    }
-    .modal-card {
-      background-color: #ffffff;
-      width: 100%;
-      max-width: 440px;
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
-      padding: 18px 16px 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      max-height: 85vh;
-      overflow-y: auto;
-      box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.25);
-      animation: slideUp 0.25s ease-out;
-    }
-    @keyframes slideUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
-    .modal-header-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 8px;
-      border-bottom: 1px solid #f1f5f9;
-    }
-    .btn-close-modal {
-      background: none;
-      border: none;
-      font-size: 22px;
-      color: #94a3b8;
-      cursor: pointer;
-      padding: 2px 8px;
-      line-height: 1;
-    }
-
-    /* 출입구 리스트 */
-    .door-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 6px;
-    }
-    .door-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background-color: #f8fafc;
-      padding: 10px 12px;
-      border-radius: 10px;
-      font-size: 12px;
-      border: 1px solid #e2e8f0;
-    }
-    .door-icon {
-      font-size: 16px;
-      flex-shrink: 0;
-    }
-    .door-title {
-      font-weight: 700;
-      color: #1e293b;
-      margin-right: 4px;
-    }
-    .door-desc {
-      color: #64748b;
-      flex: 1;
-    }
-
-    /* 층별 상세 지도 스타일 */
-    .floor-tab-bar {
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-    .floor-tab-btn {
-      flex: 1;
-      background-color: #f1f5f9;
-      border: 1px solid #cbd5e1;
-      color: #475569;
-      padding: 6px 0;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.15s;
-    }
-    .floor-tab-btn.active {
-      background-color: #2563eb;
-      border-color: #2563eb;
-      color: #ffffff;
-      box-shadow: 0 1px 4px rgba(37, 99, 235, 0.3);
-    }
-    .floor-map-box {
-      width: 100%;
-      background-color: #f8fafc;
-      border: 1.5px solid #cbd5e1;
-      border-radius: 12px;
-      overflow: hidden;
-      position: relative;
-    }
-    .floor-svg {
-      width: 100%;
-      height: 180px;
-      display: block;
-      user-select: none;
-    }
-    .floor-room {
-      fill: #ffffff;
-      stroke: #94a3b8;
-      stroke-width: 1.2;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .floor-room:hover, .floor-room.active {
-      fill: #dbeafe !important;
-      stroke: #2563eb !important;
-      stroke-width: 2 !important;
-    }
-    .room-name-text {
-      font-size: 8px;
-      font-weight: 800;
-      fill: #0f172a;
-      pointer-events: none;
-      text-anchor: middle;
-    }
-    .room-desc-text {
-      font-size: 6.5px;
-      font-weight: 600;
-      fill: #64748b;
-      pointer-events: none;
-      text-anchor: middle;
-    }
-    .selected-room-info {
-      background-color: #eff6ff;
-      border: 1px solid #bfdbfe;
-      border-radius: 10px;
-      padding: 9px 12px;
-      font-size: 12px;
-      color: #1e40af;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    /* 요일별 수업 탭 섹션 */
-    .schedule-card {
-      background-color: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
+    /* ========================================================
+       8. 오늘 수업 시간표 카드 & 시간표 추가
+       ======================================================== */
+    .timetable-section {
+      background: #ffffff;
+      margin: 0 12px 16px;
       padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
     }
-    .schedule-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .schedule-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: #0f172a;
-    }
-    .btn-add-class {
-      background-color: #eff6ff;
-      color: #2563eb;
-      border: 1px solid #bfdbfe;
-      padding: 5px 10px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    /* 요일 탭 바 */
-    .day-tabs {
-      display: flex;
-      background-color: #f1f5f9;
-      border-radius: 10px;
-      padding: 3px;
-    }
-    .day-tab {
-      flex: 1;
-      text-align: center;
-      padding: 8px 0;
-      font-size: 13px;
-      font-weight: 700;
-      color: #64748b;
-      border-radius: 8px;
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.15s;
-    }
-    .day-tab.active {
-      background-color: #ffffff;
-      color: #2563eb;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-    }
-
-    /* 수업 카드 목록 */
-    .class-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 240px;
-      overflow-y: auto;
-    }
-    .class-card {
+    .section-title-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 12px;
-      background-color: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 10px;
+      margin-bottom: 10px;
     }
-    .class-info {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .class-time {
-      font-size: 11px;
-      font-weight: 700;
-      color: #64748b;
-    }
-    .class-name {
+    .section-title {
       font-size: 14px;
       font-weight: 800;
       color: #0f172a;
-    }
-    .class-loc {
-      font-size: 12px;
-      color: #2563eb;
-      font-weight: 600;
-    }
-    .class-actions {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
-    .btn-find-door {
-      background-color: #2563eb;
+    .schedule-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .schedule-info {
+      flex: 1;
+    }
+    .schedule-subject {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 2px;
+    }
+    .schedule-room {
+      font-size: 11.5px;
+      color: #64748b;
+      font-weight: 600;
+    }
+    .btn-nav-schedule {
+      background: var(--primary);
       color: #ffffff;
       border: none;
       padding: 6px 10px;
       border-radius: 8px;
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 700;
       cursor: pointer;
-      white-space: nowrap;
-    }
-    .btn-del-class {
-      background: none;
-      border: none;
-      color: #94a3b8;
-      cursor: pointer;
-      font-size: 16px;
-      padding: 4px;
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 24px 0;
-      color: #94a3b8;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    /* 수업 추가 모달 */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: rgba(15, 23, 42, 0.6);
-      display: none;
-      justify-content: center;
+      display: flex;
       align-items: center;
-      z-index: 1000;
-      padding: 16px;
+      gap: 3px;
     }
-    .modal-overlay.active {
-      display: flex;
+    .btn-nav-schedule:active {
+      transform: scale(0.95);
     }
-    .modal-card {
-      background-color: #ffffff;
-      width: 100%;
-      max-width: 360px;
-      border-radius: 18px;
-      padding: 20px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    }
-    .modal-title {
-      font-size: 16px;
-      font-weight: 800;
-      color: #0f172a;
-    }
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .form-label {
-      font-size: 12px;
-      font-weight: 700;
-      color: #475569;
-    }
-    .form-select, .form-input {
-      width: 100%;
-      height: 42px;
-      padding: 8px 12px;
-      border: 1.5px solid #cbd5e1;
+    .btn-delete-schedule {
+      background: #f1f5f9;
+      color: #ef4444;
+      border: 1px solid #fecaca;
+      padding: 6px 8px;
       border-radius: 8px;
-      font-size: 14px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      transition: background 0.15s;
+    }
+    .btn-delete-schedule:active {
+      background: #fee2e2;
+    }
+    .schedule-actions {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* 시간표 추가 인풋 아코디언 */
+    .add-schedule-box {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed #cbd5e1;
+    }
+    .add-schedule-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .add-schedule-row {
+      display: flex;
+      gap: 6px;
+    }
+    .schedule-input {
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      font-size: 11.5px;
+      font-weight: 600;
       outline: none;
     }
-    .modal-btn-row {
-      display: flex;
-      gap: 8px;
-      margin-top: 6px;
-    }
-    .btn-modal-cancel {
-      flex: 1;
-      height: 42px;
-      background-color: #f1f5f9;
-      color: #475569;
-      border: none;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .btn-modal-submit {
-      flex: 1;
-      height: 42px;
-      background-color: #2563eb;
+    .btn-submit-schedule {
+      width: 100%;
+      padding: 7px;
+      background: #0f172a;
       color: #ffffff;
       border: none;
       border-radius: 8px;
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 700;
       cursor: pointer;
     }
 
-    /* 토스트 메시지 */
-    .toast {
+    /* 토스트 알림 */
+    .toast-popup {
       position: fixed;
       bottom: 24px;
       left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background-color: #0f172a;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(15, 23, 42, 0.94);
       color: #ffffff;
-      padding: 9px 16px;
+      padding: 8px 16px;
       border-radius: 20px;
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
+      z-index: 5000;
       opacity: 0;
-      transition: all 0.25s ease;
-      z-index: 2000;
       pointer-events: none;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
       white-space: nowrap;
     }
-    .toast.show {
-      transform: translateX(-50%) translateY(0);
+    .toast-popup.show {
       opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
 
-<div id="app-container">
-  <!-- 상단 테스트 컨트롤 바 (항상 고정) -->
-  <div class="test-control-bar">
-    <div class="test-badge">테스트 모드</div>
-    <div class="test-btn-group">
-      <button id="btn-next-day" class="btn-test" title="가상 요일을 다음 날로 넘깁니다">
-        📅 다음 날로 이동
-      </button>
-      <button id="btn-reset-app" class="btn-test btn-test-reset" title="데이터를 모두 초기화합니다">
-        🔄 처음부터 다시
-      </button>
+  <div id="app">
+
+    <!-- 1. AGENTS.md 필수 테스트 컨트롤 바 -->
+    <div class="test-control-bar">
+      <div style="display:flex; align-items:center; gap:6px;">
+        <span class="test-badge">AGY S3</span>
+        <span id="test-day-display">월요일 수업 모드</span>
+      </div>
+      <div class="test-btn-group">
+        <button class="btn-test" onclick="handleNextDay()">📅 다음 날로 이동</button>
+        <button class="btn-test btn-test-reset" onclick="handleReset()">🔄 처음부터 다시</button>
+      </div>
     </div>
-  </div>
 
-  <!-- 헤더 -->
-  <header class="app-header">
-    <h1>🏛️ 한밭대 캠퍼스 길잡이</h1>
-    <div id="header-today-pill" class="today-pill">오늘: 월요일</div>
-  </header>
+    <!-- 2. 메인 헤더 & 빠른 호실 검색 -->
+    <header class="app-header">
+      <div class="header-title-row">
+        <div>
+          <div class="app-title">🏢 S3 경상학관 층별 길잡이</div>
+          <div class="app-sub">한밭대학교 전공건물 실내 내비게이션</div>
+        </div>
+        <div class="today-pill" id="today-badge">월요일</div>
+      </div>
 
-  <!-- 본문 스크롤 영역 -->
-  <main class="content-area">
-
-    <!-- 1. 장소 검색창 & 즐겨찾기 -->
-    <section class="search-section">
       <div class="search-box">
-        <input type="text" id="input-search" class="search-input" placeholder="한밭대 모든 건물(N1~N13, S0~S11, D동) 검색..." autocomplete="off">
-        <button id="btn-clear-search" class="search-clear-btn">×</button>
-        <!-- 검색 자동완성 목록 -->
-        <div id="search-dropdown" class="search-dropdown"></div>
+        <span class="search-icon">🔍</span>
+        <input type="text" id="room-search-input" class="search-input" placeholder="호실 번호 검색 (예: 301, 204, 대강당)" onkeyup="handleSearchKey(event)">
+        <button class="search-btn" onclick="executeSearch()">찾기</button>
+      </div>
+    </header>
+
+    <!-- 최근 찾은 강의실 칩 -->
+    <div class="recent-chips-bar" id="recent-chips-container"></div>
+
+    <!-- 3. 층수 퀵 셀렉터 (1F ~ 7F 탭) -->
+    <div class="floor-tabs-wrapper">
+      <button class="floor-tab-btn" onclick="switchFloor(1)" id="tab-1F">1F</button>
+      <button class="floor-tab-btn" onclick="switchFloor(2)" id="tab-2F">2F</button>
+      <button class="floor-tab-btn active" onclick="switchFloor(3)" id="tab-3F">3F</button>
+      <button class="floor-tab-btn" onclick="switchFloor(4)" id="tab-4F">4F</button>
+      <button class="floor-tab-btn" onclick="switchFloor(5)" id="tab-5F">5F</button>
+      <button class="floor-tab-btn" onclick="switchFloor(6)" id="tab-6F">6F</button>
+      <button class="floor-tab-btn" onclick="switchFloor(7)" id="tab-7F">7F</button>
+    </div>
+
+    <!-- 4. 내 출발 위치 선택 -->
+    <div class="start-loc-card">
+      <span class="start-loc-label">📍 내 출발 위치:</span>
+      <select id="start-loc-select" class="start-loc-select" onchange="handleStartLocChange()">
+        <option value="EV">🛗 중앙 엘리베이터 앞</option>
+        <option value="MID_STAIR">🪜 중간 계단</option>
+        <option value="RIGHT_STAIR">🪜 우측 끝 계단</option>
+        <option value="MAIN_GATE">🚪 1층 정문 현관</option>
+      </select>
+    </div>
+
+    <!-- 5. 학생 맞춤 친절한 실내 방향 안내 배너 -->
+    <div class="guide-banner" id="guide-banner">
+      <div class="guide-icon-box" id="guide-icon">👉</div>
+      <div class="guide-text-box">
+        <div class="guide-target-room" id="guide-target">S3-301호 컴퓨터실습실</div>
+        <div class="guide-instruction" id="guide-text">엘리베이터 하차 ➡️ 오른쪽 복도로 10걸음 직진!</div>
+      </div>
+    </div>
+
+    <!-- 6. 인터랙티브 파스텔 SVG 평면도 뷰어 -->
+    <div class="map-container">
+      <div class="map-header-row">
+        <div class="map-floor-title" id="canvas-floor-title">
+          <span>📐 S3 3층 평면도</span>
+        </div>
+        <div class="map-legend">
+          <div class="legend-item"><span class="legend-dot" style="background:#93c5fd;"></span>강의실</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#fcd34d;"></span>EV/계단</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#fecdd3;"></span>화장실</div>
+        </div>
       </div>
 
-      <!-- 즐겨찾기 가로 스크롤 칩 (3회 이상 검색 또는 ★ 등록 시 자동 표시) -->
-      <div id="favorites-container" class="favorites-scroll">
-        <!-- 동적 렌더링 -->
-      </div>
-    </section>
+      <!-- 반응형 SVG 평면도 캔버스 -->
+      <svg id="s3-svg-canvas" class="svg-floor-canvas" viewBox="0 0 380 240"></svg>
+    </div>
 
-    <!-- 4. 인터랙티브 캠퍼스 지도 영역 -->
-    <section class="map-card">
-      <div class="map-header">
-        <span>🗺️ 유성(덕명)캠퍼스 전 건물 지도</span>
-        <span id="map-hint" style="color: #2563eb;">건물 선택됨</span>
-      </div>
-
-      <!-- 구역 빠른 이동 버튼 -->
-      <div class="zone-filter-bar">
-        <button class="zone-filter-btn active" data-zone="all">전체보기</button>
-        <button class="zone-filter-btn" data-zone="N">N동(북측)</button>
-        <button class="zone-filter-btn" data-zone="S">S동(남측)</button>
-        <button class="zone-filter-btn" data-zone="D">D동(생활관)</button>
-      </div>
-
-      <div class="map-viewport" id="map-viewport">
-        <svg id="campus-svg" class="campus-svg" viewBox="0 0 700 520">
-          <!-- 배경 부지 잔디 -->
-          <rect x="0" y="0" width="700" height="520" fill="#e2e8f0"/>
-          
-          <!-- 녹지 공원 & 잔디광장 (혜윰광장 등) -->
-          <path d="M 30,30 Q 150,20 280,40 T 520,30 L 670,180 Q 450,150 250,180 Z" fill="#dcfce7" opacity="0.8"/>
-          <path d="M 30,240 Q 200,230 400,240 T 670,260 L 670,480 L 30,480 Z" fill="#dcfce7" opacity="0.6"/>
-          <!-- 중앙 혜윰광장 -->
-          <ellipse cx="260" cy="215" rx="70" ry="16" fill="#bbf7d0" stroke="#86efac" stroke-width="1.5"/>
-          <text x="260" y="217" font-size="8.5" font-weight="700" fill="#15803d" text-anchor="middle">혜윰광장 (중앙)</text>
-
-          <!-- 캠퍼스 메인 도로망 (아스팔트 & 차도/보행로) -->
-          <!-- 동서 관통 중앙 도로 -->
-          <path d="M 10,215 L 690,215" stroke="#cbd5e1" stroke-width="22" stroke-linecap="round"/>
-          <path d="M 10,215 L 690,215" stroke="#ffffff" stroke-width="2" stroke-dasharray="10,10"/>
-          
-          <!-- 남북 관통 도로 3줄 -->
-          <path d="M 150,20 L 150,490" stroke="#cbd5e1" stroke-width="14" stroke-linecap="round"/>
-          <path d="M 380,20 L 380,490" stroke="#cbd5e1" stroke-width="16" stroke-linecap="round"/>
-          <path d="M 380,20 L 380,490" stroke="#ffffff" stroke-width="2" stroke-dasharray="8,8"/>
-          <path d="M 540,20 L 540,490" stroke="#cbd5e1" stroke-width="12" stroke-linecap="round"/>
-
-          <!-- 학교 정문 표시 (남측 중앙) -->
-          <rect x="330" y="495" width="100" height="20" rx="4" fill="#0f172a"/>
-          <text x="380" y="508" font-size="10" font-weight="800" fill="#ffffff" text-anchor="middle">▲ 학교 정문 (버스정류장)</text>
-
-          <!-- 구역 구분 가이드 라벨 -->
-          <text x="20" y="35" font-size="11" font-weight="800" fill="#3b82f6">● N동 구역 (캠퍼스 북측 - 공학·본부·혁신)</text>
-          <text x="20" y="245" font-size="11" font-weight="800" fill="#059669">● S동 구역 (캠퍼스 남측 - 도서관·학관·인문·경상)</text>
-          <text x="560" y="245" font-size="11" font-weight="800" fill="#d97706">● D동 (학생생활관)</text>
-
-          <!-- ============================================== -->
-          <!-- N동 전체 건물 SVG 그룹 (N1 ~ N13) -->
-          <!-- ============================================== -->
-          <!-- 1열 (Y: 50~90) -->
-          <g class="bldg-group" data-id="N1"><rect id="bldg-rect-N1" class="map-bldg" x="30" y="55" width="48" height="38" rx="5"/><text x="54" y="70" class="bldg-code">N1</text><text x="54" y="81" class="bldg-label">대학본부</text></g>
-          <g class="bldg-group" data-id="N2"><rect id="bldg-rect-N2" class="map-bldg" x="90" y="55" width="48" height="38" rx="5"/><text x="114" y="70" class="bldg-code">N2</text><text x="114" y="81" class="bldg-label">아트홀</text></g>
-          <g class="bldg-group" data-id="N3"><rect id="bldg-rect-N3" class="map-bldg" x="170" y="55" width="55" height="38" rx="5"/><text x="197" y="70" class="bldg-code">N3</text><text x="197" y="81" class="bldg-label">전기전자</text></g>
-          <g class="bldg-group" data-id="N4"><rect id="bldg-rect-N4" class="map-bldg" x="240" y="55" width="55" height="38" rx="5"/><text x="267" y="70" class="bldg-code">N4</text><text x="267" y="81" class="bldg-label">산업정보</text></g>
-          <g class="bldg-group" data-id="N5"><rect id="bldg-rect-N5" class="map-bldg" x="310" y="55" width="50" height="38" rx="5"/><text x="335" y="70" class="bldg-code">N5</text><text x="335" y="81" class="bldg-label">자동화관</text></g>
-
-          <!-- 2열 (Y: 105~145) -->
-          <g class="bldg-group" data-id="N6"><rect id="bldg-rect-N6" class="map-bldg" x="30" y="110" width="52" height="38" rx="5"/><text x="56" y="125" class="bldg-code">N6</text><text x="56" y="136" class="bldg-label">화학환경</text></g>
-          <g class="bldg-group" data-id="N7"><rect id="bldg-rect-N7" class="map-bldg" x="90" y="110" width="48" height="38" rx="5"/><text x="114" y="125" class="bldg-code">N7</text><text x="114" y="136" class="bldg-label">기계관</text></g>
-          <g class="bldg-group" data-id="N8"><rect id="bldg-rect-N8" class="map-bldg" x="170" y="110" width="55" height="38" rx="5"/><text x="197" y="125" class="bldg-code">N8</text><text x="197" y="136" class="bldg-label">첨단소재</text></g>
-          <g class="bldg-group" data-id="N9"><rect id="bldg-rect-N9" class="map-bldg" x="240" y="110" width="55" height="38" rx="5"/><text x="267" y="125" class="bldg-code">N9</text><text x="267" y="136" class="bldg-label">첨단실습</text></g>
-          <g class="bldg-group" data-id="N10"><rect id="bldg-rect-N10" class="map-bldg" x="310" y="110" width="50" height="38" rx="5"/><text x="335" y="125" class="bldg-code">N10</text><text x="335" y="136" class="bldg-label">파워플랜트</text></g>
-
-          <!-- 3열 (Y: 160~198) - 주요 혁신관 및 에너지관 -->
-          <g class="bldg-group" data-id="N11"><rect id="bldg-rect-N11" class="map-bldg" x="405" y="65" width="60" height="42" rx="5"/><text x="435" y="81" class="bldg-code">N11</text><text x="435" y="93" class="bldg-label">창의혁신</text></g>
-          <g class="bldg-group" data-id="N12"><rect id="bldg-rect-N12" class="map-bldg" x="475" y="65" width="52" height="42" rx="5"/><text x="501" y="81" class="bldg-code">N12</text><text x="501" y="93" class="bldg-label">동아리관</text></g>
-          <g class="bldg-group" data-id="N13"><rect id="bldg-rect-N13" class="map-bldg" x="405" y="120" width="60" height="42" rx="5"/><text x="435" y="136" class="bldg-code">N13</text><text x="435" y="148" class="bldg-label">그린에너지</text></g>
-
-          <!-- ============================================== -->
-          <!-- S동 전체 건물 SVG 그룹 (S0 ~ S11) -->
-          <!-- ============================================== -->
-          <!-- 1열 (Y: 260~300) -->
-          <g class="bldg-group" data-id="S0"><rect id="bldg-rect-S0" class="map-bldg" x="30" y="260" width="52" height="40" rx="5"/><text x="56" y="276" class="bldg-code">S0</text><text x="56" y="287" class="bldg-label">국제교류</text></g>
-          <g class="bldg-group" data-id="S1"><rect id="bldg-rect-S1" class="map-bldg" x="90" y="260" width="55" height="40" rx="5"/><text x="117" y="276" class="bldg-code">S1</text><text x="117" y="287" class="bldg-label">도서관</text></g>
-          <g class="bldg-group" data-id="S2"><rect id="bldg-rect-S2" class="map-bldg" x="170" y="260" width="55" height="40" rx="5"/><text x="197" y="276" class="bldg-code">S2</text><text x="197" y="287" class="bldg-label">학생회관</text></g>
-          <g class="bldg-group" data-id="S3"><rect id="bldg-rect-S3" class="map-bldg" x="240" y="260" width="55" height="40" rx="5"/><text x="267" y="276" class="bldg-code">S3</text><text x="267" y="287" class="bldg-label">경상학관</text></g>
-          <g class="bldg-group" data-id="S4"><rect id="bldg-rect-S4" class="map-bldg" x="310" y="260" width="55" height="40" rx="5"/><text x="337" y="276" class="bldg-code">S4</text><text x="337" y="287" class="bldg-label">인문사회</text></g>
-
-          <!-- 2열 (Y: 320~360) -->
-          <g class="bldg-group" data-id="S5"><rect id="bldg-rect-S5" class="map-bldg" x="30" y="320" width="55" height="40" rx="5"/><text x="57" y="336" class="bldg-code">S5</text><text x="57" y="347" class="bldg-label">산학연협동</text></g>
-          <g class="bldg-group" data-id="S6"><rect id="bldg-rect-S6" class="map-bldg" x="95" y="320" width="55" height="40" rx="5"/><text x="122" y="336" class="bldg-code">S6</text><text x="122" y="347" class="bldg-label">첨단건설</text></g>
-          <g class="bldg-group" data-id="S7"><rect id="bldg-rect-S7" class="map-bldg" x="170" y="320" width="55" height="40" rx="5"/><text x="197" y="336" class="bldg-code">S7</text><text x="197" y="347" class="bldg-label">체육관</text></g>
-          <g class="bldg-group" data-id="S8"><rect id="bldg-rect-S8" class="map-bldg" x="240" y="320" width="55" height="40" rx="5"/><text x="267" y="336" class="bldg-code">S8</text><text x="267" y="347" class="bldg-label">건설공학</text></g>
-          <g class="bldg-group" data-id="S9"><rect id="bldg-rect-S9" class="map-bldg" x="310" y="320" width="55" height="40" rx="5"/><text x="337" y="336" class="bldg-code">S9</text><text x="337" y="347" class="bldg-label">인큐베이터</text></g>
-
-          <!-- 3열 (Y: 380~425) -->
-          <g class="bldg-group" data-id="S10"><rect id="bldg-rect-S10" class="map-bldg" x="405" y="260" width="60" height="42" rx="5"/><text x="435" y="277" class="bldg-code">S10</text><text x="435" y="289" class="bldg-label">디자인관</text></g>
-          <g class="bldg-group" data-id="S11"><rect id="bldg-rect-S11" class="map-bldg" x="405" y="320" width="60" height="42" rx="5"/><text x="435" y="337" class="bldg-code">S11</text><text x="435" y="349" class="bldg-label">학군단</text></g>
-
-          <!-- ============================================== -->
-          <!-- D동 학생생활관 기숙사 단지 (동측 구역) -->
-          <!-- ============================================== -->
-          <g class="bldg-group" data-id="D1"><rect id="bldg-rect-D1" class="map-bldg" x="555" y="260" width="70" height="90" rx="6"/><text x="590" y="295" class="bldg-code">D동</text><text x="590" y="310" class="bldg-label">학생생활관</text><text x="590" y="323" font-size="7.5" fill="#64748b" text-anchor="middle">(기숙사)</text></g>
-
-          <!-- 동적으로 생성되는 출입구 핀 레이어 -->
-          <g id="door-pins-layer"></g>
-        </svg>
-      </div>
-
-      <!-- 선택된 건물 컴팩트 미니 바 (평소에는 지도만 시원하게 보기) -->
-      <div id="bldg-mini-bar" class="bldg-mini-bar">
-        <div class="bldg-mini-top">
-          <div class="bldg-name-row">
-            <span id="card-bldg-code" class="bldg-code-tag">N11</span>
-            <span id="card-bldg-zone" class="bldg-zone-tag">N동 북측</span>
-            <span id="card-bldg-name" class="bldg-name-text">창의혁신관</span>
+    <!-- 7. 강의실 상세 정보 카드 -->
+    <div class="room-detail-card" id="room-detail-card">
+      <div class="detail-top-row">
+        <div>
+          <div class="detail-badge-group">
+            <span class="detail-type-badge" id="detail-type">전산실습실</span>
+            <span style="font-size:11px; color:#64748b;" id="detail-floor">3층 북서측</span>
           </div>
-          <button id="btn-toggle-favorite" class="btn-fav-toggle" title="즐겨찾기 토글">★</button>
+          <div class="detail-room-name" id="detail-name">S3-301호 강의실</div>
         </div>
+        <button class="btn-fav-star" id="btn-fav" onclick="toggleFavorite()" title="즐겨찾기">★</button>
+      </div>
+      <div class="detail-direction-guide" id="detail-guide">
+        💡 <strong>방향 팁:</strong> 중앙 엘리베이터에서 내리면 오른쪽 복도 끝에 바로 있습니다. 중간 계단 이용 시 문 열고 바로 좌측입니다.
+      </div>
+    </div>
 
-        <!-- 각 버튼을 눌러야만 상세 정보가 활성화되는 액션 버튼 -->
-        <div class="bldg-action-btn-group">
-          <button id="btn-open-door-modal" class="btn-action-trigger">
-            🚪 출입구 안내 보기
-          </button>
-          <button id="btn-open-floor-modal" class="btn-action-trigger primary">
-            📐 층별 상세 지도 보기
-          </button>
+    <!-- 8. 오늘의 수업 시간표 카드 & 시간표 등록 -->
+    <section class="timetable-section">
+      <div class="section-title-row">
+        <div class="section-title">
+          <span>📅 오늘의 수업 및 강의실 연동</span>
         </div>
+        <span style="font-size:11px; color:#2563eb; font-weight:700;" id="today-schedule-count">2개 강의</span>
+      </div>
+
+      <div id="today-schedules-container"></div>
+
+      <!-- 시간표 직접 추가 -->
+      <div class="add-schedule-box">
+        <div style="font-size:11.5px; font-weight:700; color:#475569; margin-bottom:6px;">➕ 시간표에 수업 추가하기</div>
+        <div class="add-schedule-grid">
+          <div class="add-schedule-row">
+            <select id="input-day" class="schedule-input" style="width:85px; flex-shrink:0;">
+              <option value="월">월요일</option>
+              <option value="화">화요일</option>
+              <option value="수">수요일</option>
+              <option value="목">목요일</option>
+              <option value="금">금요일</option>
+            </select>
+            <input type="text" id="input-time" class="schedule-input" style="flex:1;" placeholder="수업 시간 (예: 10:00~12:00)">
+          </div>
+          <div class="add-schedule-row">
+            <input type="text" id="input-subject" class="schedule-input" style="flex:1;" placeholder="과목명 (예: 경제학원론)">
+            <input type="text" id="input-room" class="schedule-input" style="width:110px; flex-shrink:0;" placeholder="호수 (예: 204)">
+          </div>
+        </div>
+        <button class="btn-submit-schedule" onclick="addSchedule()">시간표에 등록하기</button>
       </div>
     </section>
 
-    <!-- 요일별 수업 장소 정리 섹션 -->
-    <section class="schedule-card">
-      <div class="schedule-header">
-        <div class="schedule-title">📅 요일별 수업 장소</div>
-        <button id="btn-open-add-modal" class="btn-add-class">+ 수업 추가</button>
-      </div>
+    <!-- 토스트 팝업 알림 -->
+    <div id="toast" class="toast-popup">즐겨찾기에 등록되었습니다.</div>
 
-      <!-- 요일 탭 (월/화/수/목/금) -->
-      <div class="day-tabs" id="day-tabs">
-        <div class="day-tab active" data-day="월">월</div>
-        <div class="day-tab" data-day="화">화</div>
-        <div class="day-tab" data-day="수">수</div>
-        <div class="day-tab" data-day="목">목</div>
-        <div class="day-tab" data-day="금">금</div>
-      </div>
-
-      <!-- 수업 목록 -->
-      <div id="class-list" class="class-list">
-        <!-- 동적 렌더링 -->
-      </div>
-    </section>
-
-  </main>
-</div>
-
-<!-- 새 수업 추가 모달 -->
-<div id="modal-add-class" class="modal-overlay">
-  <div class="modal-card">
-    <div class="modal-title">새 수업 장소 등록</div>
-
-    <div class="form-group">
-      <label class="form-label" for="select-modal-day">요일</label>
-      <select id="select-modal-day" class="form-select">
-        <option value="월">월요일</option>
-        <option value="화">화요일</option>
-        <option value="수">수요일</option>
-        <option value="목">목요일</option>
-        <option value="금">금요일</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label" for="input-class-name">강의명</label>
-      <input type="text" id="input-class-name" class="form-input" placeholder="예: 바이브코딩 기초">
-    </div>
-
-    <div class="form-group">
-      <label class="form-label" for="select-class-bldg">수업 건물 (한밭대 전체)</label>
-      <select id="select-class-bldg" class="form-select">
-        <!-- 동적 건물 옵션 -->
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label" for="input-class-room">강의실 호수</label>
-      <input type="text" id="input-class-room" class="form-input" placeholder="예: 402호 멀티미디어실">
-    </div>
-
-    <div class="form-group">
-      <label class="form-label" for="input-class-time">수업 시간</label>
-      <input type="text" id="input-class-time" class="form-input" placeholder="예: 10:00 ~ 12:00 (2~3교시)">
-    </div>
-
-    <div class="modal-btn-row">
-      <button id="btn-modal-cancel" class="btn-modal-cancel">취소</button>
-      <button id="btn-modal-submit" class="btn-modal-submit">등록하기</button>
-    </div>
   </div>
-</div>
 
-<!-- 🚪 출입구 안내 모달 (버튼을 눌렀을 때만 활성화) -->
-<div id="modal-door-info" class="modal-overlay">
-  <div class="modal-card">
-    <div class="modal-header-row">
-      <div style="display: flex; align-items: center; gap: 6px;">
-        <span id="modal-door-bldg-code" class="bldg-code-tag">N11</span>
-        <span id="modal-door-bldg-name" style="font-size: 16px; font-weight: 800; color: #0f172a;">창의혁신관</span>
-        <span style="font-size: 12px; color: #64748b; font-weight: 600;">출입구 위치</span>
-      </div>
-      <button id="btn-close-door-modal" class="btn-close-modal">×</button>
-    </div>
+  <script>
+    /* ========================================================
+       9. S3 경상학관 1F~7F 도면 기반 정밀 데이터 모델
+       ======================================================== */
+    const DAYS = ["월", "화", "수", "목", "금", "토", "일"];
 
-    <div id="card-door-list" class="door-grid" style="margin-top: 4px;">
-      <!-- 동적 생성 -->
-    </div>
-
-    <button id="btn-confirm-door-modal" class="btn-modal-submit" style="margin-top: 8px; width: 100%;">
-      확인 및 지도 보기
-    </button>
-  </div>
-</div>
-
-<!-- 📐 층별 상세 평면도 모달 (버튼을 눌렀을 때만 활성화) -->
-<div id="modal-floor-plan" class="modal-overlay">
-  <div class="modal-card">
-    <div class="modal-header-row">
-      <div style="display: flex; align-items: center; gap: 6px;">
-        <span id="modal-floor-bldg-code" class="bldg-code-tag">N11</span>
-        <span id="modal-floor-bldg-name" style="font-size: 16px; font-weight: 800; color: #0f172a;">창의혁신관</span>
-        <span style="font-size: 12px; color: #2563eb; font-weight: 700;">층별 상세 지도</span>
-      </div>
-      <button id="btn-close-floor-modal" class="btn-close-modal">×</button>
-    </div>
-
-    <!-- 층 선택 탭 바 (1F ~ 5F) -->
-    <div id="floor-tab-bar" class="floor-tab-bar" style="margin: 4px 0;">
-      <!-- 동적 생성 -->
-    </div>
-
-    <!-- 평면도 SVG 뷰포트 -->
-    <div class="floor-map-box">
-      <svg id="floor-svg" class="floor-svg" viewBox="0 0 320 170">
-        <!-- 층별 방 및 복도 평면도 동적 렌더링 -->
-      </svg>
-    </div>
-
-    <!-- 선택된 호실/시설 안내 -->
-    <div id="selected-room-info" class="selected-room-info">
-      <span id="room-info-text">💡 평면도의 강의실/시설을 터치하면 상세 정보가 표시됩니다.</span>
-      <span id="room-info-badge" style="font-size: 10px; font-weight: 700; color: #2563eb;"></span>
-    </div>
-
-    <button id="btn-confirm-floor-modal" class="btn-modal-submit" style="margin-top: 6px; width: 100%;">
-      ✕ 닫기 및 지도 보기
-    </button>
-  </div>
-</div>
-
-<!-- 알림 토스트 -->
-<div id="toast" class="toast">알림</div>
-
-<script>
-  /**
-   * 한밭대 유성(덕명)캠퍼스 전체 건물 지도 & 강의실 길잡이 웹앱
-   * AGENTS.md 및 계획서.md 조건 완벽 준수:
-   * 1. localStorage 키: campus_map_data
-   * 2. 순수 바닐라 HTML/CSS/JS 단일 파일
-   * 3. 한밭대 N1~N13, S0~S11, D동 기숙사 전체 26개 동 전수 탑재
-   * 4. 출입구 위치 핀 표시, 검색 및 즐겨찾기(3회 이상 자동 등록)
-   * 5. 요일별 수업 장소 정리 및 다음 날 이동 재조율
-   * 6. 테스트 버튼 2개 상시 제공
-   */
-
-  const STORAGE_KEY = 'campus_map_data';
-
-  // 한밭대학교 유성(덕명)캠퍼스 전 건물 공식 DB (총 26개 건물)
-  const CAMPUS_BUILDINGS = [
-    // --- 🟢 N동 (캠퍼스 북측 - N1 ~ N13) ---
-    {
-      id: 'N1', name: '대학본부', code: 'N1', zone: 'N동 북측',
-      x: 30, y: 55, w: 48, h: 38,
-      doors: [
-        { type: 'door', title: '중앙 정문', desc: '1층 총장실/교무처/입학처 메인 로비' },
-        { type: 'ramp', title: '동측 경사로', desc: '아트홀 방면 휠체어/유모차 전용 진입로' },
-        { type: 'elevator', title: '중앙 승강기', desc: '1층 안내데스크 맞은편 2대' }
-      ]
-    },
-    {
-      id: 'N2', name: '아트홀 (문화예술관)', code: 'N2', zone: 'N동 북측',
-      x: 90, y: 55, w: 48, h: 38,
-      doors: [
-        { type: 'door', title: '대강당 정문', desc: '1층 공연장/콘서트홀 메인 게이트' },
-        { type: 'ramp', title: '무대 경사로', desc: '정문 좌측 장애인 전용 진입 통로' },
-        { type: 'elevator', title: '로비 엘리베이터', desc: '전시실 및 무대 상층부 운행' }
-      ]
-    },
-    {
-      id: 'N3', name: '전기전자관', code: 'N3', zone: 'N동 북측',
-      x: 170, y: 55, w: 55, h: 38,
-      doors: [
-        { type: 'door', title: '남측 정문', desc: '전기공학과/제어계측 전공강의실 입구' },
-        { type: 'door', title: '북측 후문', desc: '연구동 주차장 방면 출입구' },
-        { type: 'elevator', title: '중앙 승강기', desc: '1층 복도 중앙 게시판 옆' }
-      ]
-    },
-    {
-      id: 'N4', name: '산업정보관', code: 'N4', zone: 'N동 북측',
-      x: 240, y: 55, w: 55, h: 38,
-      doors: [
-        { type: 'door', title: '1층 메인 정문', desc: '컴퓨터실습실/산업경영공학 전공강의실' },
-        { type: 'ramp', title: '정문 진입 경사로', desc: '현관 우측 계단 없는 완만 경사로' },
-        { type: 'elevator', title: '동편 엘리베이터', desc: '2층~5층 실습실 운행' }
-      ]
-    },
-    {
-      id: 'N5', name: '자동화관', code: 'N5', zone: 'N동 북측',
-      x: 310, y: 55, w: 50, h: 38,
-      doors: [
-        { type: 'door', title: '남측 주출입구', desc: '로봇공학/자동화 생산 실습실 입구' },
-        { type: 'door', title: '화물 반입 후문', desc: '1층 대형 기기 실습실 연결' },
-        { type: 'elevator', title: '승강기', desc: '중앙 홀 1대' }
-      ]
-    },
-    {
-      id: 'N6', name: '화학환경관', code: 'N6', zone: 'N동 북측',
-      x: 30, y: 110, w: 52, h: 38,
-      doors: [
-        { type: 'door', title: '정문 출입구', desc: '화학생명공학/환경공학 전공실습실' },
-        { type: 'door', title: '안전 비상 후문', desc: '실험실 배기구 및 안전샤워 부스 방면' },
-        { type: 'elevator', title: '중앙 승강기', desc: '복도 서편 위치' }
-      ]
-    },
-    {
-      id: 'N7', name: '기계관', code: 'N7', zone: 'N동 북측',
-      x: 90, y: 110, w: 48, h: 38,
-      doors: [
-        { type: 'door', title: '1층 정문', desc: '기계공학과 설계실 및 전공 강의실' },
-        { type: 'door', title: '정밀가공 실습문', desc: '1층 공작기계 실습동 연결 통로' },
-        { type: 'elevator', title: '메인 엘리베이터', desc: '1층 휴게실 앞' }
-      ]
-    },
-    {
-      id: 'N8', name: '첨단소재관', code: 'N8', zone: 'N동 북측',
-      x: 170, y: 110, w: 55, h: 38,
-      doors: [
-        { type: 'door', title: '남측 출입구', desc: '신소재공학과 실험실습실 메인 게이트' },
-        { type: 'ramp', title: '무장애 램프', desc: '현관 좌측 휠체어 진입로' },
-        { type: 'elevator', title: '연구동 승강기', desc: '공동실험실습관 연결' }
-      ]
-    },
-    {
-      id: 'N9', name: '첨단공학실습관', code: 'N9', zone: 'N동 북측',
-      x: 240, y: 110, w: 55, h: 38,
-      doors: [
-        { type: 'door', title: '1층 정문', desc: '캡스톤디자인/메이커스페이스 전용 입구' },
-        { type: 'door', title: '장비 반출입문', desc: '대형 프로젝트룸 연결 도어' },
-        { type: 'elevator', title: '중앙 엘리베이터', desc: '1대 운행' }
-      ]
-    },
-    {
-      id: 'N10', name: '파워플랜트', code: 'N10', zone: 'N동 북측',
-      x: 310, y: 110, w: 50, h: 38,
-      doors: [
-        { type: 'door', title: '시설관리 주출입구', desc: '캠퍼스 에너지 및 전력제어센터' },
-        { type: 'door', title: '엔지니어링 후문', desc: '외부 설비 통로' }
-      ]
-    },
-    {
-      id: 'N11', name: '창의혁신관', code: 'N11', zone: 'N동 북측',
-      x: 405, y: 65, w: 60, h: 42,
-      doors: [
-        { type: 'door', title: '남측 유리문 정문', desc: 'SW중심대학사업단/AI소프트웨어 전공' },
-        { type: 'ramp', title: '정문 진입 경사로', desc: '혜윰광장 연결 무장애 진입로' },
-        { type: 'elevator', title: '엘리베이터 2대', desc: '1층 로비 카페 앞 전 층 운행' },
-        { type: 'door', title: '동측 카페 출입문', desc: '1층 학생 카페 직통 연결 도어' }
-      ]
-    },
-    {
-      id: 'N12', name: '동아리관', code: 'N12', zone: 'N동 북측',
-      x: 475, y: 65, w: 52, h: 42,
-      doors: [
-        { type: 'door', title: '1층 메인 게이트', desc: '중앙 동아리방, 공연 연습실' },
-        { type: 'door', title: '밴드부 후문', desc: '방음 연습실 방면 출입구' },
-        { type: 'elevator', title: '승강기', desc: '1층 게시판 옆' }
-      ]
-    },
-    {
-      id: 'N13', name: '그린에너지관', code: 'N13', zone: 'N동 북측',
-      x: 405, y: 120, w: 60, h: 42,
-      doors: [
-        { type: 'door', title: '남측 정문', desc: '신재생에너지/차세대배터리 연구센터' },
-        { type: 'ramp', title: '무장애 경사로', desc: '현관 우측 완만 경사로' },
-        { type: 'elevator', title: '연구동 엘리베이터', desc: '전 층 운행' }
-      ]
-    },
-
-    // --- 🔵 S동 (캠퍼스 남측 - S0 ~ S11) ---
-    {
-      id: 'S0', name: '국제교류관', code: 'S0', zone: 'S동 남측',
-      x: 30, y: 260, w: 52, h: 40,
-      doors: [
-        { type: 'door', title: '정문 로비', desc: '한국어학당, 국제교류원, 글로벌라운지' },
-        { type: 'ramp', title: '진입 경사로', desc: '외국인 유학생 지원센터 방면' },
-        { type: 'elevator', title: '중앙 승강기', desc: '1대 운행' }
-      ]
-    },
-    {
-      id: 'S1', name: '중앙도서관 (디지털도서관)', code: 'S1', zone: 'S동 남측',
-      x: 90, y: 260, w: 55, h: 40,
-      doors: [
-        { type: 'door', title: '북측 정문 회전문', desc: '1층 모바일 열람증 게이트, 대출/반납' },
-        { type: 'door', title: '북카페 후문', desc: '1층 스터디카페 및 야외 쉼터 연결' },
-        { type: 'ramp', title: '정문 무장애 경사로', desc: '현관 좌측 휠체어 전용' },
-        { type: 'elevator', title: '중앙 엘리베이터 2대', desc: '자료실/열람실/세미나실 전 층 운행' }
-      ]
-    },
-    {
-      id: 'S2', name: '학생회관 (복지후생관)', code: 'S2', zone: 'S동 남측',
-      x: 170, y: 260, w: 55, h: 40,
-      doors: [
-        { type: 'door', title: '1층 식당 정문', desc: '학생식당, 교직원식당, 분식코너' },
-        { type: 'door', title: '2층 편의시설 후문', desc: '편의점, 서점, 안경점, 우체국 연결' },
-        { type: 'elevator', title: '승강기', desc: '학생식당 복도 중앙' }
-      ]
-    },
-    {
-      id: 'S3', name: '경상학관', code: 'S3', zone: 'S동 남측',
-      x: 240, y: 260, w: 55, h: 40,
-      doors: [
-        { type: 'door', title: '1층 정문', desc: '경영회계학과 전공강의실, 금융실습실' },
-        { type: 'ramp', title: '현관 경사로', desc: '장애인 전용 진입로' },
-        { type: 'elevator', title: '중앙 승강기', desc: '2층~5층 강의실 운행' }
-      ]
-    },
-    {
-      id: 'S4', name: '인문사회관', code: 'S4', zone: 'S동 남측',
-      x: 310, y: 260, w: 55, h: 40,
-      doors: [
-        { type: 'door', title: '1층 주출입구', desc: '영어영문/공공행정/교양 전공강의실' },
-        { type: 'door', title: '2층 구름다리', desc: '학생회관(S2) 및 경상관 연결 복도' },
-        { type: 'elevator', title: '메인 엘리베이터', desc: '1층 로비 위치' }
-      ]
-    },
-    {
-      id: 'S5', name: '산학연협동관', code: 'S5', zone: 'S동 남측',
-      x: 30, y: 320, w: 55, h: 40,
-      doors: [
-        { type: 'door', title: '1층 메인 정문', desc: '산학협력단, 입주기업 연구소' },
-        { type: 'door', title: '지하주차장 출입문', desc: '주차타워 직통 연결 엘리베이터' },
-        { type: 'elevator', title: '엘리베이터 2대', desc: '화물/승객 겸용' }
-      ]
-    },
-    {
-      id: 'S6', name: '첨단건설실습관', code: 'S6', zone: 'S동 남측',
-      x: 95, y: 320, w: 55, h: 40,
-      doors: [
-        { type: 'door', title: '1층 정문', desc: '건축/토목 구조재료 실험동' },
-        { type: 'door', title: '대형 시험장 후문', desc: '건설 중장비 및 시편 반입구' },
-        { type: 'elevator', title: '승강기', desc: '연구실 층 운행' }
-      ]
-    },
-    {
-      id: 'S7', name: '체육관 (생활체육관)', code: 'S7', zone: 'S동 남측',
-      x: 170, y: 320, w: 55, h: 40,
-      doors: [
-        { type: 'door', title: '메인 경기장 정문', desc: '실내 농구장, 배구장, 대강당' },
-        { type: 'door', title: '체력단련실 후문', desc: '피트니스센터, 샤워/탈의실 연결' },
-        { type: 'ramp', title: '휠체어 진입 램프', desc: '체육관 1층 평면 진입로' }
-      ]
-    },
-    {
-      id: 'S8', name: '건설공학관', code: 'S8', zone: 'S동 남측',
-      x: 240, y: 320, w: 55, h: 40,
-      doors: [
-        { type: 'door', title: '1층 정문', desc: '도시공학/건축공학과 설계제도실' },
-        { type: 'ramp', title: '정문 경사로', desc: '보행자 도로 연결' },
-        { type: 'elevator', title: '중앙 승강기', desc: '1층 엘리베이터홀' }
-      ]
-    },
-    {
-      id: 'S9', name: '한밭인큐베이터타운', code: 'S9', zone: 'S동 남측',
-      x: 310, y: 320, w: 55, h: 40,
-      doors: [
-        { type: 'door', title: '1층 센터 정문', desc: '창업보육센터, 청년 스타트업 오피스' },
-        { type: 'door', title: '공용 코워킹 후문', desc: '아이디어 회의실 직통' },
-        { type: 'elevator', title: '승강기', desc: '2~4층 오피스 운행' }
-      ]
-    },
-    {
-      id: 'S10', name: '디자인관 (조형학관)', code: 'S10', zone: 'S동 남측',
-      x: 405, y: 260, w: 60, h: 42,
-      doors: [
-        { type: 'door', title: '1층 갤러리 정문', desc: '시각디자인/산업디자인 전공실기실, 전시홀' },
-        { type: 'door', title: '조형작업실 후문', desc: '목공/도예/금속 조형 작업동 연결' },
-        { type: 'elevator', title: '화물/일반 승강기', desc: '대형 작품 운반용 겸용' }
-      ]
-    },
-    {
-      id: 'S11', name: '학군단 (ROTC)', code: 'S11', zone: 'S동 남측',
-      x: 405, y: 320, w: 60, h: 42,
-      doors: [
-        { type: 'door', title: '학군단 본부 정문', desc: '제138학군단 행정실 및 강의실' },
-        { type: 'door', title: '연병장 연결문', desc: '연병장 및 체력단련장 통로' }
-      ]
-    },
-
-    // --- 🟠 D동 (학생생활관 기숙사) ---
-    {
-      id: 'D1', name: '학생생활관 (기숙사)', code: 'D동', zone: 'D동 생활관',
-      x: 555, y: 260, w: 70, h: 90,
-      doors: [
-        { type: 'door', title: '사생 전용 게이트', desc: '지문/학생증 보안 태그 출입문' },
-        { type: 'door', title: '1층 편의점/식당문', desc: '기숙사 식당 및 무인 편의점' },
-        { type: 'ramp', title: '생활관 진입 경사로', desc: '택배 보관소 앞 무장애 도로' },
-        { type: 'elevator', title: '호실 전용 승강기 4대', desc: '남/여 사생 구역 분리 운행' }
-      ]
-    }
-  ];
-
-  // 요일별 대표 기본 샘플 시간표 (월~금)
-  const DEFAULT_CLASSES = [
-    { id: 'c1', day: '월', time: '10:00 ~ 12:00', name: '바이브코딩 입문', bldgId: 'N11', room: '402호 실습실' },
-    { id: 'c2', day: '월', time: '14:00 ~ 16:00', name: '컴퓨터 알고리즘', bldgId: 'N4', room: '301호 전산실' },
-    { id: 'c3', day: '화', time: '09:30 ~ 12:00', name: '대학 영어회화', bldgId: 'S4', room: '205호 어학실' },
-    { id: 'c4', day: '화', time: '13:00 ~ 15:00', name: '디지털 회로이론', bldgId: 'N3', room: '104호 대형실' },
-    { id: 'c5', day: '수', time: '10:00 ~ 12:00', name: '전공 세미나', bldgId: 'S1', room: '세미나실 3호' },
-    { id: 'c6', day: '수', time: '14:00 ~ 16:00', name: '웹 프로그래밍 실습', bldgId: 'N11', room: '501호 전산실' },
-    { id: 'c7', day: '목', time: '11:00 ~ 13:00', name: '경영학원론', bldgId: 'S3', room: '201호 강의실' },
-    { id: 'c8', day: '목', time: '15:00 ~ 17:00', name: '생활체육 배드민턴', bldgId: 'S7', room: '체육관 실내코트' },
-    { id: 'c9', day: '금', time: '10:00 ~ 12:00', name: '인터랙션 디자인', bldgId: 'S10', room: '302호 실기실' }
-  ];
-
-  const DAYS_ORDER = ['월', '화', '수', '목', '금', '토', '일'];
-
-  // 상태 모델
-  let state = {
-    currentDayIdx: 0,
-    selectedBldgId: 'N11',
-    selectedFloor: '1F', // 현재 보고 있는 층
-    selectedDayTab: '월',
-    searchCounts: {},
-    favorites: ['N11', 'S1', 'S2'],
-    classes: [...DEFAULT_CLASSES]
-  };
-
-  // --- 스토리지 함수 ---
-  function saveState() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    } catch (e) {
-      console.error('LocalStorage 저장 실패:', e);
-    }
-  }
-
-  function loadState() {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        state = Object.assign(state, JSON.parse(saved));
+    // S3 도면 기반 호실 DB
+    const S3_FLOORS_DATA = {
+      1: {
+        title: "S3 1층 (로비 및 원형 대강당)",
+        type: "T_SHAPE", // 凸 형태
+        viewBox: "0 0 380 230",
+        rooms: [
+          { id: "101", name: "101호 계단식 대형강의실", type: "대형강의실", x: 20, y: 30, w: 90, h: 65, fill: "#eff6ff", stroke: "#93c5fd", guide: "중앙 현관 진입 후 좌측 복도 끝 대형 계단식 강의실입니다." },
+          { id: "102", name: "102호 강의실", type: "강의실", x: 20, y: 125, w: 42, h: 45, fill: "#eff6ff", stroke: "#93c5fd", guide: "1층 남서측 첫 번째 강의실입니다." },
+          { id: "103", name: "103호 강의실", type: "강의실", x: 68, y: 125, w: 42, h: 45, fill: "#eff6ff", stroke: "#93c5fd", guide: "1층 남서측 복도 중간 강의실입니다." },
+          { id: "105", name: "105호 경상대학 행정실", type: "행정실", x: 175, y: 125, w: 55, h: 45, fill: "#ecfdf5", stroke: "#6ee7b7", guide: "중앙 현관 우측 바로 앞 경상학관 행정실입니다." },
+          { id: "106", name: "106호 세미나실", type: "세미나실", x: 235, y: 125, w: 50, h: 45, fill: "#eff6ff", stroke: "#93c5fd", guide: "행정실 바로 옆 세미나실입니다." },
+          { id: "107", name: "107호 학생 라운지", type: "휴게공간", x: 245, y: 30, w: 65, h: 65, fill: "#f5f3ff", stroke: "#c4b5fd", guide: "엘리베이터 우측 복도 끝 학생 라운지 및 휴게실입니다." },
+          { id: "108", name: "108호 원형 계단식 대강당", type: "원형강당", x: 295, y: 110, w: 75, h: 105, rx: 14, fill: "#fdf4ff", stroke: "#f0abfc", guide: "중앙 현관에서 우측 남동쪽으로 진입하는 S3 랜드마크 원형 대강당입니다." }
+        ],
+        cores: [
+          { id: "EV", name: "중앙 엘리베이터", x: 155, y: 30, w: 32, h: 45, icon: "🛗", fill: "#fef3c7" },
+          { id: "REST", name: "남녀 화장실", x: 192, y: 30, w: 42, h: 45, icon: "🚻", fill: "#fff1f2" },
+          { id: "MID_STAIR", name: "중간 계단", x: 116, y: 30, w: 32, h: 50, icon: "🪜", fill: "#fef3c7" },
+          { id: "RIGHT_STAIR", name: "우측 계단", x: 316, y: 30, w: 26, h: 45, icon: "🪜", fill: "#fef3c7" },
+          { id: "MAIN_GATE", name: "중앙 정문 현관", x: 125, y: 130, w: 42, h: 40, icon: "🚪", fill: "#fed7aa" }
+        ],
+        corridors: [
+          { x: 20, y: 100, w: 290, h: 20 }, // 가로 중앙 복도
+          { x: 305, y: 100, w: 20, h: 25 } // 108호 진입로
+        ]
+      },
+      2: {
+        title: "S3 2층 (전공 강의실 & 남측 날개)",
+        type: "L_SHAPE", // ㄴ 형태
+        viewBox: "0 0 380 250",
+        rooms: [
+          { id: "201", name: "201호 전공강의실", type: "강의실", x: 20, y: 30, w: 85, h: 60, fill: "#eff6ff", stroke: "#93c5fd", guide: "엘리베이터에서 내려서 왼쪽 복도 끝에 위치합니다." },
+          { id: "202", name: "202호 강의실", type: "강의실", x: 20, y: 115, w: 50, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "엘리베이터 하차 후 왼쪽 남측 복도 202호입니다." },
+          { id: "203", name: "203호 강의실", type: "강의실", x: 75, y: 115, w: 45, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "202호 바로 옆 강의실입니다." },
+          { id: "204", name: "204호 회계정보실습실", type: "실습실", x: 165, y: 115, w: 60, h: 50, fill: "#ecfdf5", stroke: "#6ee7b7", guide: "엘리베이터 바로 건너편 남측 실습실입니다." },
+          { id: "205", name: "205호 강의실", type: "강의실", x: 230, y: 115, w: 50, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "엘리베이터에서 내려서 오른쪽 남측 강의실입니다." },
+          { id: "207", name: "207호 대형강의실", type: "강의실", x: 235, y: 30, w: 75, h: 60, fill: "#eff6ff", stroke: "#93c5fd", guide: "엘리베이터에서 내려서 오른쪽 북측 대형 강의실입니다." },
+          // 남측 꺾임 날개 복도 호실들 (208~212)
+          { id: "208", name: "208호 학생회실", type: "학생회실", x: 285, y: 115, w: 42, h: 40, fill: "#f5f3ff", stroke: "#c4b5fd", guide: "동측 끝에서 남쪽 복도로 꺾어 들어가는 첫 번째 방입니다." },
+          { id: "206", name: "206호 세미나실", type: "세미나실", x: 332, y: 115, w: 42, h: 40, fill: "#eff6ff", stroke: "#93c5fd", guide: "남측 꺾임 복도 우측 세미나실입니다." },
+          { id: "212", name: "212호 소강의실", type: "강의실", x: 285, y: 160, w: 42, h: 40, fill: "#eff6ff", stroke: "#93c5fd", guide: "남측 꺾임 복도 좌측 두 번째 강의실입니다." },
+          { id: "209", name: "209호 동아리실", type: "학생공간", x: 332, y: 160, w: 42, h: 40, fill: "#f5f3ff", stroke: "#c4b5fd", guide: "남측 꺾임 복도 우측 동아리실입니다." },
+          { id: "211", name: "211호 스터디룸", type: "스터디룸", x: 285, y: 205, w: 42, h: 40, fill: "#ecfdf5", stroke: "#6ee7b7", guide: "남측 복도 끝 좌측 스터디룸입니다." },
+          { id: "210", name: "210호 휴게실", type: "휴게실", x: 332, y: 205, w: 42, h: 40, fill: "#fff1f2", stroke: "#fecdd3", guide: "남측 복도 맨 끝 우측 휴게실입니다." }
+        ],
+        cores: [
+          { id: "EV", name: "중앙 엘리베이터", x: 155, y: 30, w: 32, h: 45, icon: "🛗", fill: "#fef3c7" },
+          { id: "REST", name: "남녀 화장실", x: 192, y: 30, w: 38, h: 45, icon: "🚻", fill: "#fff1f2" },
+          { id: "MID_STAIR", name: "중간 계단", x: 112, y: 30, w: 32, h: 50, icon: "🪜", fill: "#fef3c7" },
+          { id: "RIGHT_STAIR", name: "우측 계단", x: 316, y: 30, w: 26, h: 50, icon: "🪜", fill: "#fef3c7" }
+        ],
+        corridors: [
+          { x: 20, y: 95, w: 295, h: 16 }, // 메인 가로 복도
+          { x: 295, y: 95, w: 18, h: 145 } // 남측 꺾임 날개 복도
+        ]
+      },
+      3: {
+        title: "S3 3층 (컴퓨터 실습실 & 야외 테라스)",
+        type: "L_SHAPE", // ㄴ 형태
+        viewBox: "0 0 380 250",
+        rooms: [
+          { id: "301", name: "301호 컴퓨터실습실", type: "실습실", x: 20, y: 30, w: 85, h: 60, fill: "#ecfdf5", stroke: "#6ee7b7", guide: "엘리베이터에서 내려서 왼쪽 복도 끝 북서측 대형 PC실습실입니다." },
+          { id: "302", name: "302호 세미나실", type: "세미나실", x: 20, y: 115, w: 85, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "엘리베이터 하차 후 왼쪽 남서측 대형 세미나실입니다." },
+          { id: "303", name: "303호 전공강의실", type: "강의실", x: 155, y: 115, w: 60, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "엘리베이터 바로 건너편 중앙 강의실입니다." },
+          { id: "304", name: "304호 전공강의실", type: "강의실", x: 220, y: 115, w: 55, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "엘리베이터 하차 후 오른쪽 남측 강의실입니다." },
+          { id: "305", name: "305호 멀티미디어실", type: "실습실", x: 235, y: 30, w: 75, h: 60, fill: "#ecfdf5", stroke: "#6ee7b7", guide: "엘리베이터에서 내려서 오른쪽 북측 멀티미디어 강의실입니다." },
+          // 남측 날개 교수연구실/소회의실 (306~314)
+          { id: "306", name: "306호 연구실", type: "연구실", x: 330, y: 115, w: 42, h: 22, fill: "#eff6ff", stroke: "#93c5fd", guide: "남측 꺾임 복도 우측 1번 연구실입니다." },
+          { id: "307", name: "307호 연구실", type: "연구실", x: 330, y: 140, w: 42, h: 22, fill: "#eff6ff", stroke: "#93c5fd", guide: "남측 꺾임 복도 우측 2번 연구실입니다." },
+          { id: "308", name: "308호 연구실", type: "연구실", x: 330, y: 165, w: 42, h: 22, fill: "#eff6ff", stroke: "#93c5fd", guide: "남측 꺾임 복도 우측 3번 연구실입니다." },
+          { id: "309", name: "309호 연구실", type: "연구실", x: 330, y: 190, w: 42, h: 22, fill: "#eff6ff", stroke: "#93c5fd", guide: "남측 꺾임 복도 우측 4번 연구실입니다." },
+          { id: "310", name: "310호 연구실", type: "연구실", x: 330, y: 215, w: 42, h: 22, fill: "#eff6ff", stroke: "#93c5fd", guide: "남측 꺾임 복도 끝 우측 연구실입니다." },
+          { id: "314", name: "314호 소회의실", type: "회의실", x: 285, y: 140, w: 40, h: 30, fill: "#f5f3ff", stroke: "#c4b5fd", guide: "남측 꺾임 복도 좌측 소회의실입니다." },
+          { id: "313", name: "313호 연구실", type: "연구실", x: 285, y: 175, w: 40, h: 30, fill: "#eff6ff", stroke: "#93c5fd", guide: "남측 꺾임 복도 좌측 연구실입니다." },
+          { id: "312", name: "312호 라운지", type: "휴게존", x: 285, y: 210, w: 40, h: 30, fill: "#f0fdf4", stroke: "#86efac", guide: "남측 복도 끝 휴게 라운지입니다." }
+        ],
+        cores: [
+          { id: "EV", name: "중앙 엘리베이터", x: 155, y: 30, w: 32, h: 45, icon: "🛗", fill: "#fef3c7" },
+          { id: "REST", name: "남녀 화장실", x: 192, y: 30, w: 38, h: 45, icon: "🚻", fill: "#fff1f2" },
+          { id: "MID_STAIR", name: "중간 계단", x: 112, y: 30, w: 32, h: 50, icon: "🪜", fill: "#fef3c7" },
+          { id: "RIGHT_STAIR", name: "우측 계단", x: 316, y: 30, w: 26, h: 50, icon: "🪜", fill: "#fef3c7" }
+        ],
+        corridors: [
+          { x: 20, y: 95, w: 295, h: 16 },
+          { x: 295, y: 95, w: 18, h: 145 }
+        ]
+      },
+      4: {
+        title: "S3 4층 (강의실 & 산학연 연결통로)",
+        type: "STRAIGHT", // ㅡ 형태 + 연결통로
+        viewBox: "0 0 380 180",
+        rooms: [
+          { id: "401", name: "401호 전공강의실", type: "강의실", x: 60, y: 25, w: 80, h: 55, fill: "#eff6ff", stroke: "#93c5fd", guide: "엘리베이터에서 내려서 왼쪽 복도 북측 강의실입니다." },
+          { id: "402", name: "402호 강의실", type: "강의실", x: 60, y: 100, w: 80, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "엘리베이터 하차 후 왼쪽 남측 강의실입니다." },
+          { id: "403", name: "403호 세미나실", type: "세미나실", x: 145, y: 100, w: 40, h: 50, fill: "#ecfdf5", stroke: "#6ee7b7", guide: "엘리베이터 건너편 중간 세미나실입니다." },
+          { id: "404", name: "404호 강의실", type: "강의실", x: 190, y: 100, w: 60, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "엘리베이터 하차 후 오른쪽 남측 강의실입니다." },
+          { id: "405", name: "405호 강의실", type: "강의실", x: 255, y: 100, w: 60, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "오른쪽 복도 끝 남측 강의실입니다." },
+          { id: "406", name: "406호 대형강의실", type: "강의실", x: 255, y: 25, w: 60, h: 55, fill: "#eff6ff", stroke: "#93c5fd", guide: "엘리베이터 하차 후 오른쪽 북측 대형 강의실입니다." },
+          { id: "BRIDGE", name: "산학연협동관 구름다리", type: "연결통로", x: 10, y: 65, w: 45, h: 30, fill: "#fed7aa", stroke: "#fb923c", guide: "서측 산학연협동관으로 바로 넘어가는 구름다리 연결통로입니다." },
+          { id: "TERRACE", name: "남측 옥상정원", type: "옥상정원", x: 260, y: 155, w: 80, h: 20, rx: 6, fill: "#f0fdf4", stroke: "#86efac", guide: "4층 남측 야외 옥상 테라스 쉼터입니다." }
+        ],
+        cores: [
+          { id: "EV", name: "중앙 엘리베이터", x: 190, y: 25, w: 28, h: 45, icon: "🛗", fill: "#fef3c7" },
+          { id: "REST", name: "남녀 화장실", x: 222, y: 25, w: 30, h: 45, icon: "🚻", fill: "#fff1f2" },
+          { id: "MID_STAIR", name: "중간 계단", x: 145, y: 25, w: 30, h: 48, icon: "🪜", fill: "#fef3c7" },
+          { id: "RIGHT_STAIR", name: "우측 계단", x: 320, y: 25, w: 25, h: 48, icon: "🪜", fill: "#fef3c7" }
+        ],
+        corridors: [
+          { x: 55, y: 82, w: 268, h: 16 }
+        ]
+      },
+      5: {
+        title: "S3 5층 (교수연구실 & 전공세미나실)",
+        type: "STRAIGHT",
+        viewBox: "0 0 380 160",
+        rooms: [
+          { id: "501", name: "501호 연구실", type: "연구실", x: 150, y: 20, w: 26, h: 42, fill: "#eff6ff", stroke: "#93c5fd", guide: "엘리베이터 좌측 북측 연구실입니다." },
+          { id: "502", name: "502호 연구실", type: "연구실", x: 122, y: 20, w: 26, h: 42, fill: "#eff6ff", stroke: "#93c5fd", guide: "중간 복도 좌측 2번 연구실입니다." },
+          { id: "503", name: "503호 연구실", type: "연구실", x: 94, y: 20, w: 26, h: 42, fill: "#eff6ff", stroke: "#93c5fd", guide: "중간 복도 좌측 3번 연구실입니다." },
+          { id: "504", name: "504호 연구실", type: "연구실", x: 66, y: 20, w: 26, h: 42, fill: "#eff6ff", stroke: "#93c5fd", guide: "중간 복도 좌측 4번 연구실입니다." },
+          { id: "505", name: "505호 대학원세미나", type: "세미나실", x: 38, y: 20, w: 26, h: 42, fill: "#ecfdf5", stroke: "#6ee7b7", guide: "좌측 북서측 끝 대학원 세미나실입니다." },
+          { id: "506", name: "506호 연구실", type: "연구실", x: 38, y: 85, w: 32, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "좌측 남서측 끝 연구실입니다." },
+          { id: "507", name: "507호 연구실", type: "연구실", x: 72, y: 85, w: 32, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "남서측 2번 연구실입니다." },
+          { id: "508", name: "508호 학과회의실", type: "회의실", x: 106, y: 85, w: 40, h: 50, fill: "#f5f3ff", stroke: "#c4b5fd", guide: "남측 학과 소회의실입니다." },
+          { id: "509", name: "509호 연구실", type: "연구실", x: 148, y: 85, w: 32, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "엘리베이터 맞은편 남측 연구실입니다." },
+          { id: "510", name: "510호 중강의실", type: "강의실", x: 195, y: 85, w: 50, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "엘리베이터 우측 남측 중강의실입니다." },
+          { id: "511", name: "511호 연구실", type: "연구실", x: 248, y: 85, w: 45, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "오른쪽 복도 남측 연구실입니다." },
+          { id: "512", name: "512호 연구실", type: "연구실", x: 295, y: 85, w: 25, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "오른쪽 복도 끝 연구실 A입니다." },
+          { id: "513", name: "513호 연구실", type: "연구실", x: 322, y: 85, w: 25, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "오른쪽 복도 끝 연구실 B입니다." },
+          { id: "514", name: "514호 연구실", type: "연구실", x: 295, y: 20, w: 25, h: 42, fill: "#eff6ff", stroke: "#93c5fd", guide: "오른쪽 북측 끝 연구실입니다." },
+          { id: "515", name: "515호 연구실", type: "연구실", x: 268, y: 20, w: 25, h: 42, fill: "#eff6ff", stroke: "#93c5fd", guide: "오른쪽 북측 연구실입니다." }
+        ],
+        cores: [
+          { id: "EV", name: "중앙 엘리베이터", x: 195, y: 20, w: 28, h: 42, icon: "🛗", fill: "#fef3c7" },
+          { id: "REST", name: "남녀 화장실", x: 226, y: 20, w: 32, h: 42, icon: "🚻", fill: "#fff1f2" },
+          { id: "MID_STAIR", name: "중간 계단", x: 178, y: 20, w: 15, h: 45, icon: "🪜", fill: "#fef3c7" },
+          { id: "RIGHT_STAIR", name: "우측 계단", x: 322, y: 20, w: 25, h: 45, icon: "🪜", fill: "#fef3c7" }
+        ],
+        corridors: [
+          { x: 30, y: 65, w: 318, h: 16 }
+        ]
+      },
+      6: {
+        title: "S3 6층 (교수연구실 클러스터)",
+        type: "STRAIGHT",
+        viewBox: "0 0 380 160",
+        rooms: [
+          { id: "601", name: "601호 연구실", type: "연구실", x: 150, y: 20, w: 26, h: 42, fill: "#eff6ff", stroke: "#93c5fd", guide: "엘리베이터 좌측 첫 번째 연구실입니다." },
+          { id: "602", name: "602호 연구실", type: "연구실", x: 122, y: 20, w: 26, h: 42, fill: "#eff6ff", stroke: "#93c5fd", guide: "좌측 복도 2번 연구실입니다." },
+          { id: "603", name: "603호 연구실", type: "연구실", x: 94, y: 20, w: 26, h: 42, fill: "#eff6ff", stroke: "#93c5fd", guide: "좌측 복도 3번 연구실입니다." },
+          { id: "604", name: "604호 연구실", type: "연구실", x: 66, y: 20, w: 26, h: 42, fill: "#eff6ff", stroke: "#93c5fd", guide: "좌측 복도 4번 연구실입니다." },
+          { id: "605", name: "605호 연구실", type: "연구실", x: 38, y: 20, w: 26, h: 42, fill: "#eff6ff", stroke: "#93c5fd", guide: "좌측 북서측 끝 연구실입니다." },
+          { id: "606", name: "606호 연구실", type: "연구실", x: 38, y: 85, w: 32, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "남서측 끝 연구실입니다." },
+          { id: "607", name: "607호 연구실", type: "연구실", x: 72, y: 85, w: 32, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "남서측 2번 연구실입니다." },
+          { id: "608", name: "608호 대학원연구실", type: "대학원실", x: 106, y: 85, w: 40, h: 50, fill: "#f5f3ff", stroke: "#c4b5fd", guide: "남측 대학원 공동 연구실입니다." },
+          { id: "609", name: "609호 연구실", type: "연구실", x: 148, y: 85, w: 32, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "엘리베이터 맞은편 연구실입니다." },
+          { id: "610", name: "610호 전공세미나실", type: "세미나실", x: 195, y: 85, w: 50, h: 50, fill: "#ecfdf5", stroke: "#6ee7b7", guide: "우측 남측 세미나실입니다." },
+          { id: "611", name: "611호 연구실", type: "연구실", x: 248, y: 85, w: 45, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "우측 남측 연구실입니다." },
+          { id: "612", name: "612호 연구실", type: "연구실", x: 295, y: 85, w: 25, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "우측 끝 연구실 A입니다." },
+          { id: "613", name: "613호 연구실", type: "연구실", x: 322, y: 85, w: 25, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "우측 끝 연구실 B입니다." },
+          { id: "614", name: "614호 연구실", type: "연구실", x: 295, y: 20, w: 25, h: 42, fill: "#eff6ff", stroke: "#93c5fd", guide: "우측 북측 끝 연구실입니다." },
+          { id: "615", name: "615호 연구실", type: "연구실", x: 268, y: 20, w: 25, h: 42, fill: "#eff6ff", stroke: "#93c5fd", guide: "우측 북측 연구실입니다." }
+        ],
+        cores: [
+          { id: "EV", name: "중앙 엘리베이터", x: 195, y: 20, w: 28, h: 42, icon: "🛗", fill: "#fef3c7" },
+          { id: "REST", name: "남녀 화장실", x: 226, y: 20, w: 32, h: 42, icon: "🚻", fill: "#fff1f2" },
+          { id: "MID_STAIR", name: "중간 계단", x: 178, y: 20, w: 15, h: 45, icon: "🪜", fill: "#fef3c7" },
+          { id: "RIGHT_STAIR", name: "우측 계단", x: 322, y: 20, w: 25, h: 45, icon: "🪜", fill: "#fef3c7" }
+        ],
+        corridors: [
+          { x: 30, y: 65, w: 318, h: 16 }
+        ]
+      },
+      7: {
+        title: "S3 7층 (최상층 연구실 & 라운지)",
+        type: "STRAIGHT",
+        viewBox: "0 0 380 160",
+        rooms: [
+          { id: "701", name: "701호 연구실", type: "연구실", x: 150, y: 20, w: 26, h: 42, fill: "#eff6ff", stroke: "#93c5fd", guide: "엘리베이터 좌측 첫 번째 연구실입니다." },
+          { id: "702", name: "702호 연구실", type: "연구실", x: 122, y: 20, w: 26, h: 42, fill: "#eff6ff", stroke: "#93c5fd", guide: "좌측 복도 2번 연구실입니다." },
+          { id: "703", name: "703호 연구실", type: "연구실", x: 94, y: 20, w: 26, h: 42, fill: "#eff6ff", stroke: "#93c5fd", guide: "좌측 복도 3번 연구실입니다." },
+          { id: "704", name: "704호 연구실", type: "연구실", x: 66, y: 20, w: 26, h: 42, fill: "#eff6ff", stroke: "#93c5fd", guide: "좌측 복도 4번 연구실입니다." },
+          { id: "705", name: "705호 명예교수실", type: "교수실", x: 38, y: 20, w: 26, h: 42, fill: "#f5f3ff", stroke: "#c4b5fd", guide: "좌측 북서측 끝 명예교수실입니다." },
+          { id: "706", name: "706호 연구실", type: "연구실", x: 38, y: 85, w: 32, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "남서측 끝 연구실입니다." },
+          { id: "707", name: "707호 연구실", type: "연구실", x: 72, y: 85, w: 32, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "남서측 2번 연구실입니다." },
+          { id: "708", name: "708호 연구실", type: "연구실", x: 106, y: 85, w: 40, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "남측 연구실입니다." },
+          { id: "709", name: "709호 연구실", type: "연구실", x: 148, y: 85, w: 32, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "엘리베이터 맞은편 연구실입니다." },
+          { id: "710", name: "710호 스카이라운지", type: "휴게존", x: 195, y: 85, w: 50, h: 50, fill: "#f0fdf4", stroke: "#86efac", guide: "우측 남측 전망 좋은 7층 스카이라운지입니다." },
+          { id: "711", name: "711호 연구실", type: "연구실", x: 248, y: 85, w: 45, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "우측 남측 연구실입니다." },
+          { id: "712", name: "712호 연구실", type: "연구실", x: 295, y: 85, w: 25, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "우측 끝 연구실 A입니다." },
+          { id: "713", name: "713호 연구실", type: "연구실", x: 322, y: 85, w: 25, h: 50, fill: "#eff6ff", stroke: "#93c5fd", guide: "우측 끝 연구실 B입니다." },
+          { id: "714", name: "714호 연구실", type: "연구실", x: 295, y: 20, w: 25, h: 42, fill: "#eff6ff", stroke: "#93c5fd", guide: "우측 북측 끝 연구실입니다." },
+          { id: "715", name: "715호 연구실", type: "연구실", x: 268, y: 20, w: 25, h: 42, fill: "#eff6ff", stroke: "#93c5fd", guide: "우측 북측 연구실입니다." }
+        ],
+        cores: [
+          { id: "EV", name: "중앙 엘리베이터", x: 195, y: 20, w: 28, h: 42, icon: "🛗", fill: "#fef3c7" },
+          { id: "REST", name: "남녀 화장실", x: 226, y: 20, w: 32, h: 42, icon: "🚻", fill: "#fff1f2" },
+          { id: "MID_STAIR", name: "중간 계단", x: 178, y: 20, w: 15, h: 45, icon: "🪜", fill: "#fef3c7" },
+          { id: "RIGHT_STAIR", name: "우측 계단", x: 322, y: 20, w: 25, h: 45, icon: "🪜", fill: "#fef3c7" }
+        ],
+        corridors: [
+          { x: 30, y: 65, w: 318, h: 16 }
+        ]
       }
-    } catch (e) {
-      console.error('LocalStorage 불러오기 실패:', e);
-    }
-  }
+    };
 
-  function showToast(msg) {
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.classList.add('show');
-    setTimeout(() => {
-      toast.classList.remove('show');
-    }, 2200);
-  }
+    /* 기본 샘플 시간표 */
+    const DEFAULT_SCHEDULES = [
+      { id: 1, day: "월", time: "10:00~12:00", subject: "경영학원론", room: "301" },
+      { id: 2, day: "월", time: "14:00~16:00", subject: "회계정보실습", room: "204" },
+      { id: 3, day: "화", time: "11:00~13:00", subject: "미시경제학", room: "201" },
+      { id: 4, day: "수", time: "13:00~15:00", subject: "마케팅관리", room: "304" },
+      { id: 5, day: "목", time: "10:00~12:00", subject: "대학세미나", room: "108" }
+    ];
 
-  function getBuilding(bldgId) {
-    return CAMPUS_BUILDINGS.find(b => b.id === bldgId) || CAMPUS_BUILDINGS[0];
-  }
+    /* ========================================================
+       10. 앱 상태 관리 (State & LocalStorage)
+       ======================================================== */
+    const STORAGE_KEY = "s3_floorplan_data";
 
-  // --- 건물 선택 및 지도/상세정보 갱신 ---
-  function selectBuilding(bldgId, triggerBySearch = false) {
-    const bldg = getBuilding(bldgId);
-    if (!bldg) return;
+    let state = {
+      currentFloor: 3,
+      selectedRoomId: "301",
+      startLoc: "EV", // EV, MID_STAIR, RIGHT_STAIR, MAIN_GATE
+      currentDayIndex: 0, // 0:월 ~ 6:일
+      recents: ["301", "204", "108"],
+      favorites: ["301"],
+      schedules: DEFAULT_SCHEDULES
+    };
 
-    state.selectedBldgId = bldg.id;
-
-    // 검색 횟수 누적 및 즐겨찾기 자동 등록 규칙 (3회 이상)
-    if (triggerBySearch) {
-      state.searchCounts[bldg.id] = (state.searchCounts[bldg.id] || 0) + 1;
-      if (state.searchCounts[bldg.id] >= 3 && !state.favorites.includes(bldg.id)) {
-        state.favorites.push(bldg.id);
-        showToast(`★ 자주 찾는 '${bldg.name}'이 즐겨찾기에 자동 등록되었습니다!`);
+    // 로컬스토리지 로드
+    function loadState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          state = { ...state, ...parsed };
+        }
+      } catch (e) {
+        console.error("저장소 로드 오류", e);
       }
     }
 
-    saveState();
-    renderMap();
-    renderBldgInfoCard(bldg);
-    renderFavorites();
+    // 로컬스토리지 저장
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          currentFloor: state.currentFloor,
+          selectedRoomId: state.selectedRoomId,
+          startLoc: state.startLoc,
+          currentDayIndex: state.currentDayIndex,
+          recents: state.recents,
+          favorites: state.favorites,
+          schedules: state.schedules
+        }));
+      } catch (e) {
+        console.error("저장소 저장 오류", e);
+      }
+    }
 
-    // 건물 위치로 지도 뷰포트 스무스 스크롤
-    scrollToBuildingOnMap(bldg);
-  }
+    /* ========================================================
+       11. 평면도 SVG 렌더링 & 길안내 엔진
+       ======================================================== */
+    function renderFloorCanvas() {
+      const floorData = S3_FLOORS_DATA[state.currentFloor];
+      const svg = document.getElementById("s3-svg-canvas");
+      document.getElementById("canvas-floor-title").innerHTML = `<span>📐 ${floorData.title}</span>`;
+      svg.setAttribute("viewBox", floorData.viewBox);
 
-  // 지도 뷰포트 내 건물 위치로 자동 스크롤
-  function scrollToBuildingOnMap(bldg) {
-    const viewport = document.getElementById('map-viewport');
-    // SVG 좌표 비율에 맞춰 스크롤 위치 계산
-    const targetX = Math.max(0, bldg.x - 120);
-    const targetY = Math.max(0, bldg.y - 80);
-    viewport.scrollTo({ left: targetX, top: targetY, behavior: 'smooth' });
-  }
+      let html = "";
 
-  // --- 지도 렌더링 (SVG 하이라이트 및 출입구 핀) ---
-  function renderMap() {
-    const currentBldg = getBuilding(state.selectedBldgId);
+      // 1. 복도 바닥 렌더링
+      floorData.corridors.forEach(c => {
+        html += `<rect x="${c.x}" y="${c.y}" width="${c.w}" height="${c.h}" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1.5" rx="4"/>`;
+      });
 
-    // 모든 건물 사각형의 선택 하이라이트 갱신
-    CAMPUS_BUILDINGS.forEach(b => {
-      const rect = document.getElementById(`bldg-rect-${b.id}`);
-      if (rect) {
-        if (b.id === currentBldg.id) {
-          rect.classList.add('selected');
+      // 2. 코어 시설 (엘리베이터, 계단, 화장실, 현관)
+      floorData.cores.forEach(core => {
+        const isStart = state.startLoc === core.id;
+        const strokeColor = isStart ? "#f59e0b" : "#cbd5e1";
+        const strokeW = isStart ? "2.5" : "1";
+        html += `
+          <g>
+            <rect x="${core.x}" y="${core.y}" width="${core.w}" height="${core.h}" fill="${core.fill}" stroke="${strokeColor}" stroke-width="${strokeW}" rx="6"/>
+            <text x="${core.x + core.w/2}" y="${core.y + core.h/2 + 4}" text-anchor="middle" font-size="12">${core.icon || ""}</text>
+          </g>
+        `;
+      });
+
+      // 3. 호실 블록들
+      floorData.rooms.forEach(room => {
+        const isSelected = room.id === state.selectedRoomId;
+        const selectedClass = isSelected ? "selected" : "";
+        const rx = room.rx || 6;
+        html += `
+          <g class="svg-room ${selectedClass}" onclick="handleSelectRoom('${room.id}')">
+            <rect x="${room.x}" y="${room.y}" width="${room.w}" height="${room.h}" rx="${rx}" fill="${room.fill}" stroke="${room.stroke}" stroke-width="1.5"/>
+            <text x="${room.x + room.w/2}" y="${room.y + room.h/2 + 3.5}" text-anchor="middle" class="svg-room-label" fill="#1e293b">${room.id}</text>
+          </g>
+        `;
+      });
+
+      // 4. 출발지 -> 목적지 실내 동선 화살표 점선 그리기
+      const startCore = floorData.cores.find(c => c.id === state.startLoc) || floorData.cores.find(c => c.id === "EV");
+      const targetRoom = floorData.rooms.find(r => r.id === state.selectedRoomId);
+
+      if (startCore && targetRoom) {
+        const sx = startCore.x + startCore.w / 2;
+        const sy = startCore.y + startCore.h / 2;
+        const tx = targetRoom.x + targetRoom.w / 2;
+        const ty = targetRoom.y + targetRoom.h / 2;
+
+        // 복도 중심을 경유하는 자연스러운 실내 경로선
+        let corridorY = floorData.corridors[0].y + floorData.corridors[0].h / 2;
+        let points = "";
+
+        // L자 날개 복도 호실일 경우 경유지 추가
+        if (targetRoom.y > 140 && floorData.corridors.length > 1) {
+          const cornerX = floorData.corridors[1].x + floorData.corridors[1].w / 2;
+          points = `${sx},${sy} ${sx},${corridorY} ${cornerX},${corridorY} ${cornerX},${ty} ${tx},${ty}`;
         } else {
-          rect.classList.remove('selected');
+          points = `${sx},${sy} ${sx},${corridorY} ${tx},${corridorY} ${tx},${ty}`;
+        }
+
+        html += `
+          <polyline points="${points}" fill="none" class="guide-path-line"/>
+          <!-- 출발지 펄스 점 -->
+          <circle cx="${sx}" cy="${sy}" r="6" class="start-pulse-dot"/>
+          <!-- 도착지 핀 아이콘 -->
+          <circle cx="${tx}" cy="${ty}" r="4.5" fill="#2563eb" stroke="#ffffff" stroke-width="2"/>
+        `;
+      }
+
+      svg.innerHTML = html;
+    }
+
+    /* ========================================================
+       12. 학생 눈높이 방향 안내 문구 생성기
+       ======================================================== */
+    function updateDirectionGuide() {
+      const floorData = S3_FLOORS_DATA[state.currentFloor];
+      const room = floorData.rooms.find(r => r.id === state.selectedRoomId);
+      const startCore = floorData.cores.find(c => c.id === state.startLoc) || floorData.cores[0];
+
+      if (!room) {
+        document.getElementById("guide-target").innerText = "안내받을 강의실을 터치해주세요";
+        document.getElementById("guide-text").innerText = "평면도에서 가고 싶은 호실을 누르면 방향을 알려드려요!";
+        document.getElementById("guide-icon").innerText = "🧭";
+        return;
+      }
+
+      document.getElementById("guide-target").innerText = `S3-${room.name}`;
+
+      // 방향 계산 (좌/우/직진)
+      let directionText = "";
+      let icon = "👉";
+
+      const startX = startCore.x;
+      const targetX = room.x;
+
+      if (state.startLoc === "EV") {
+        if (targetX < startX - 20) {
+          directionText = `엘리베이터 하차 ➡️ <strong>왼쪽 복도로 직진!</strong> (약 ${Math.round(Math.abs(startX - targetX)/6)}걸음)`;
+          icon = "👈";
+        } else if (targetX > startX + 40) {
+          if (room.y > 140 && floorData.type === "L_SHAPE") {
+            directionText = `엘리베이터 하차 ➡️ <strong>오른쪽으로 가다가 남쪽 복도로 꺾으세요!</strong>`;
+            icon = "↩️";
+          } else {
+            directionText = `엘리베이터 하차 ➡️ <strong>오른쪽 복도로 직진!</strong> (약 ${Math.round(Math.abs(targetX - startX)/6)}걸음)`;
+            icon = "👉";
+          }
+        } else {
+          directionText = `엘리베이터 하차 ➡️ <strong>바로 맞은편 복도 앞!</strong>`;
+          icon = "⬇️";
+        }
+      } else if (state.startLoc === "MID_STAIR") {
+        directionText = `중간 계단 통과 후 ➡️ ${targetX < startX ? "왼쪽으로 직진" : "오른쪽으로 직진"}하세요!`;
+      } else if (state.startLoc === "RIGHT_STAIR") {
+        directionText = `우측 계단 통과 후 ➡️ ${room.y > 140 ? "남쪽 날개 복도로 진입" : "왼쪽 복도로 진입"}하세요!`;
+      } else {
+        directionText = `1층 현관 진입 후 ${room.guide}`;
+      }
+
+      document.getElementById("guide-text").innerHTML = directionText;
+      document.getElementById("guide-icon").innerText = icon;
+
+      // 하단 상세 카드 갱신
+      document.getElementById("detail-name").innerText = `S3-${room.name}`;
+      document.getElementById("detail-type").innerText = room.type;
+      document.getElementById("detail-floor").innerText = `${state.currentFloor}층 위치`;
+      document.getElementById("detail-guide").innerHTML = `💡 <strong>찾아가는 팁:</strong> ${room.guide}`;
+
+      // 즐겨찾기 별표 상태
+      const isFav = state.favorites.includes(room.id);
+      const starBtn = document.getElementById("btn-fav");
+      if (isFav) starBtn.classList.add("active");
+      else starBtn.classList.remove("active");
+    }
+
+    /* ========================================================
+       13. 층수 전환 & 호실 선택 인터랙션
+       ======================================================== */
+    function switchFloor(floorNum) {
+      state.currentFloor = floorNum;
+
+      // 층 탭 UI 활성화
+      document.querySelectorAll(".floor-tab-btn").forEach(btn => btn.classList.remove("active"));
+      const targetBtn = document.getElementById(`tab-${floorNum}F`);
+      if (targetBtn) targetBtn.classList.add("active");
+
+      // 해당 층의 첫 번째 호실을 기본 선택(현재 선택된 호실이 이 층에 없으면)
+      const floorRooms = S3_FLOORS_DATA[floorNum].rooms;
+      if (!floorRooms.some(r => r.id === state.selectedRoomId)) {
+        state.selectedRoomId = floorRooms[0] ? floorRooms[0].id : null;
+      }
+
+      renderFloorCanvas();
+      updateDirectionGuide();
+      saveState();
+    }
+
+    function handleSelectRoom(roomId) {
+      state.selectedRoomId = roomId;
+
+      // 최근 본 호실에 추가 (최대 5개)
+      if (!state.recents.includes(roomId)) {
+        state.recents.unshift(roomId);
+        if (state.recents.length > 5) state.recents.pop();
+      }
+
+      renderFloorCanvas();
+      updateDirectionGuide();
+      renderRecentChips();
+      saveState();
+    }
+
+    function handleStartLocChange() {
+      state.startLoc = document.getElementById("start-loc-select").value;
+      renderFloorCanvas();
+      updateDirectionGuide();
+      saveState();
+      showToast("📍 내 출발 위치가 변경되었습니다.");
+    }
+
+    /* 호실 검색 기능 */
+    function handleSearchKey(e) {
+      if (e.key === "Enter") executeSearch();
+    }
+
+    function executeSearch() {
+      const input = document.getElementById("room-search-input").value.trim().toUpperCase();
+      if (!input) {
+        showToast("⚠️ 검색할 호실 번호를 입력해주세요.");
+        return;
+      }
+
+      // 전체 1~7층 검색
+      let foundFloor = null;
+      let foundRoom = null;
+
+      for (let f = 1; f <= 7; f++) {
+        const match = S3_FLOORS_DATA[f].rooms.find(r => r.id === input || r.name.includes(input) || r.type.includes(input));
+        if (match) {
+          foundFloor = f;
+          foundRoom = match;
+          break;
         }
       }
-    });
 
-    document.getElementById('map-hint').textContent = `${currentBldg.code} ${currentBldg.name} 출입구 표시 중`;
-
-    // 출입구 핀 레이어 그리기
-    const layer = document.getElementById('door-pins-layer');
-    layer.innerHTML = '';
-
-    const bx = currentBldg.x;
-    const by = currentBldg.y;
-    const bw = currentBldg.w;
-    const bh = currentBldg.h;
-
-    // 실제 doors 데이터 수에 맞춰 동서남북 핀 배치
-    const pinPositions = [
-      { x: bx + bw / 2, y: by + bh + 14 }, // 남
-      { x: bx + bw + 14, y: by + bh / 2 }, // 동
-      { x: bx - 14, y: by + bh / 2 },      // 서
-      { x: bx + bw / 2, y: by - 14 }       // 북
-    ];
-
-    currentBldg.doors.forEach((door, idx) => {
-      const pos = pinPositions[idx % pinPositions.length];
-      let icon = '🚪';
-      if (door.type === 'ramp') icon = '♿';
-      if (door.type === 'elevator') icon = '🛗';
-
-      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-      g.setAttribute('class', 'pin-group');
-      g.innerHTML = `
-        <circle cx="${pos.x}" cy="${pos.y}" r="9" fill="#2563eb" stroke="#ffffff" stroke-width="2" />
-        <text x="${pos.x}" y="${pos.y + 3}" font-size="8.5" text-anchor="middle" dominant-baseline="central" fill="#ffffff">${icon}</text>
-      `;
-      layer.appendChild(g);
-    });
-  }
-
-  // --- 건물 미니 정보 바 & 모달 렌더링 ---
-  function renderBldgInfoCard(bldg) {
-    document.getElementById('card-bldg-code').textContent = bldg.code;
-    document.getElementById('card-bldg-zone').textContent = bldg.zone;
-    document.getElementById('card-bldg-name').textContent = bldg.name;
-
-    // 모달 헤더 타이틀 정보도 함께 동기화
-    document.getElementById('modal-door-bldg-code').textContent = bldg.code;
-    document.getElementById('modal-door-bldg-name').textContent = bldg.name;
-    document.getElementById('modal-floor-bldg-code').textContent = bldg.code;
-    document.getElementById('modal-floor-bldg-name').textContent = bldg.name;
-
-    const favBtn = document.getElementById('btn-toggle-favorite');
-    const isFav = state.favorites.includes(bldg.id);
-    if (isFav) {
-      favBtn.classList.add('active');
-    } else {
-      favBtn.classList.remove('active');
+      if (foundRoom) {
+        state.selectedRoomId = foundRoom.id;
+        switchFloor(foundFloor);
+        showToast(`🔍 [${foundFloor}층] S3-${foundRoom.name} 위치를 찾았습니다!`);
+        document.getElementById("room-search-input").value = "";
+      } else {
+        alert(`❌ S3(경상학관) 건물에 "${input}" 호실이 없습니다. (101호~715호 검색 가능)`);
+      }
     }
 
-    // 출입구 리스트 동적 채우기 (출입구 모달 내부)
-    const doorListEl = document.getElementById('card-door-list');
-    doorListEl.innerHTML = '';
+    /* 즐겨찾기 토글 */
+    function toggleFavorite() {
+      const roomId = state.selectedRoomId;
+      if (!roomId) return;
 
-    bldg.doors.forEach(d => {
-      let icon = '🚪';
-      if (d.type === 'ramp') icon = '♿';
-      if (d.type === 'elevator') icon = '🛗';
+      const idx = state.favorites.indexOf(roomId);
+      if (idx > -1) {
+        state.favorites.splice(idx, 1);
+        showToast(`⭐ ${roomId}호 즐겨찾기 해제`);
+      } else {
+        state.favorites.push(roomId);
+        showToast(`⭐ ${roomId}호 즐겨찾기에 등록되었습니다!`);
+      }
+      updateDirectionGuide();
+      saveState();
+    }
 
-      const div = document.createElement('div');
-      div.className = 'door-item';
-      div.innerHTML = `
-        <span class="door-icon">${icon}</span>
-        <div style="display: flex; flex-direction: column;">
-          <span class="door-title">${escapeHtml(d.title)}</span>
-          <span class="door-desc">${escapeHtml(d.desc)}</span>
-        </div>
-      `;
-      doorListEl.appendChild(div);
-    });
-
-    // 층별 탭 및 평면도 미리 준비
-    renderFloorTabs(bldg);
-    renderFloorPlan(bldg, state.selectedFloor || '1F');
-  }
-
-  // --- 층별 탭 바 렌더링 (1F ~ 5F) ---
-  const DEFAULT_FLOORS = ['1F', '2F', '3F', '4F', '5F'];
-
-  function renderFloorTabs(bldg) {
-    const tabBar = document.getElementById('floor-tab-bar');
-    tabBar.innerHTML = '';
-
-    DEFAULT_FLOORS.forEach(fl => {
-      const btn = document.createElement('button');
-      btn.className = `floor-tab-btn ${state.selectedFloor === fl ? 'active' : ''}`;
-      btn.textContent = fl;
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        state.selectedFloor = fl;
-        renderFloorTabs(bldg);
-        renderFloorPlan(bldg, fl);
-        document.getElementById('room-info-text').textContent = `💡 ${bldg.code} ${bldg.name} ${fl} 평면도입니다. 방을 터치해 보세요.`;
-        document.getElementById('room-info-badge').textContent = '';
+    /* 최근 검색 칩 렌더링 */
+    function renderRecentChips() {
+      const container = document.getElementById("recent-chips-container");
+      container.innerHTML = "";
+      state.recents.forEach(roomId => {
+        const chip = document.createElement("button");
+        chip.className = "recent-chip";
+        chip.innerHTML = `<span>📌</span> S3-${roomId}호`;
+        chip.onclick = () => {
+          // 해당 층 찾아 전환
+          for (let f = 1; f <= 7; f++) {
+            if (S3_FLOORS_DATA[f].rooms.some(r => r.id === roomId)) {
+              state.selectedRoomId = roomId;
+              switchFloor(f);
+              break;
+            }
+          }
+        };
+        container.appendChild(chip);
       });
-      tabBar.appendChild(btn);
-    });
-  }
-
-  // --- 층별 상세 평면도 (SVG) 렌더링 ---
-  function renderFloorPlan(bldg, floorName) {
-    const svg = document.getElementById('floor-svg');
-    const rooms = getFloorRooms(bldg, floorName);
-    const floorNum = parseInt(floorName.replace(/\D/g, ''), 10) || 1;
-
-    // SVG 기본 프레임 (외벽, 복도, 엘리베이터/화장실)
-    let html = `
-      <!-- 평면도 배경 바닥 -->
-      <rect x="0" y="0" width="320" height="170" fill="#f8fafc"/>
-      <!-- 건물 외벽 테두리 -->
-      <rect x="6" y="6" width="308" height="158" rx="8" fill="none" stroke="#334155" stroke-width="2.5"/>
-      <!-- 중앙 복도 (Hallway) -->
-      <rect x="8" y="62" width="304" height="38" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
-      <text x="160" y="83" font-size="8.5" font-weight="700" fill="#94a3b8" text-anchor="middle">중앙 통행 복도 (HALLWAY)</text>
-
-      <!-- 복도 공용 필수 편의시설 -->
-      <!-- 1. 엘리베이터 🛗 -->
-      <g transform="translate(136, 68)">
-        <rect x="0" y="0" width="22" height="24" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
-        <text x="11" y="15" font-size="10" text-anchor="middle">🛗</text>
-      </g>
-      <!-- 2. 비상계단 🪜 -->
-      <g transform="translate(162, 68)">
-        <rect x="0" y="0" width="22" height="24" rx="4" fill="#fef2f2" stroke="#ef4444" stroke-width="1.2"/>
-        <text x="11" y="15" font-size="10" text-anchor="middle">🪜</text>
-      </g>
-      <!-- 3. 좌측 비상구 -->
-      <text x="16" y="83" font-size="8" font-weight="700" fill="#64748b">◀비상계단</text>
-      <!-- 4. 우측 화장실 🚻 -->
-      <text x="300" y="83" font-size="8" font-weight="700" fill="#64748b" text-anchor="end">화장실▶</text>
-    `;
-
-    // 1층일 경우 주출입구 게이트 표시
-    if (floorNum === 1) {
-      html += `
-        <!-- 1층 주출입구 정문 표시 -->
-        <rect x="125" y="158" width="70" height="6" fill="#2563eb"/>
-        <text x="160" y="155" font-size="7.5" font-weight="800" fill="#2563eb" text-anchor="middle">▲ 1층 주출입구(정문)</text>
-      `;
     }
 
-    // 8개 방(강의실/시설) 렌더링
-    rooms.forEach((r, idx) => {
-      html += `
-        <g class="room-group" data-idx="${idx}" style="cursor: pointer;">
-          <rect id="floor-room-rect-${idx}" class="floor-room" x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" rx="5"/>
-          <text x="${r.x + r.w / 2}" y="${r.y + 19}" class="room-name-text">${escapeHtml(r.name)}</text>
-          <text x="${r.x + r.w / 2}" y="${r.y + 32}" class="room-desc-text">${escapeHtml(r.type)}</text>
-        </g>
-      `;
-    });
+    /* ========================================================
+       14. 오늘 수업 시간표 렌더링 & 길안내 연동
+       ======================================================== */
+    function renderTodaySchedules() {
+      const currentDay = DAYS[state.currentDayIndex];
+      document.getElementById("today-badge").innerText = `${currentDay}요일`;
+      document.getElementById("test-day-display").innerText = `${currentDay}요일 수업 모드`;
 
-    svg.innerHTML = html;
+      const container = document.getElementById("today-schedules-container");
+      container.innerHTML = "";
 
-    // 각 방 클릭 이벤트 바인딩
-    svg.querySelectorAll('.room-group').forEach(group => {
-      group.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const idx = parseInt(group.getAttribute('data-idx'), 10);
-        const r = rooms[idx];
-        if (!r) return;
+      const todayList = state.schedules.filter(s => s.day === currentDay);
+      document.getElementById("today-schedule-count").innerText = `${todayList.length}개 강의`;
 
-        // 방 하이라이트 토글
-        svg.querySelectorAll('.floor-room').forEach(el => el.classList.remove('active'));
-        const rect = document.getElementById(`floor-room-rect-${idx}`);
-        if (rect) rect.classList.add('active');
+      if (todayList.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:18px 0; color:#94a3b8; font-size:12.5px;">
+            ☕ 오늘(${currentDay}요일)은 등록된 수업이 없습니다.<br>평면도에서 자유롭게 강의실을 찾아보세요!
+          </div>
+        `;
+        return;
+      }
 
-        document.getElementById('room-info-text').innerHTML = `📍 <strong>${escapeHtml(r.name)}</strong> : ${escapeHtml(r.desc)}`;
-        document.getElementById('room-info-badge').textContent = `[${r.type}]`;
+      todayList.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "schedule-card";
+        div.innerHTML = `
+          <div class="schedule-info">
+            <div class="schedule-subject">${item.subject}</div>
+            <div class="schedule-room">[S3 경상학관] ${item.room}호 (${item.time || "수업"})</div>
+          </div>
+          <div class="schedule-actions">
+            <button class="btn-nav-schedule" onclick="navigateToScheduleRoom('${item.room}')">
+              <span>🧭</span> 길안내
+            </button>
+            <button class="btn-delete-schedule" onclick="deleteSchedule(${item.id})" title="시간표 삭제">
+              <span>🗑️</span>
+            </button>
+          </div>
+        `;
+        container.appendChild(div);
       });
-    });
-  }
-
-  // --- 건물 & 층별 방 데이터 생성기 ---
-  function getFloorRooms(bldg, floorName) {
-    const floorNum = parseInt(floorName.replace(/\D/g, ''), 10) || 1;
-    const p = `${floorNum}`; // 예: '1', '2', '3'
-
-    // 방 공통 8개 영역 좌표 (상단 4개, 하단 4개)
-    const layouts = [
-      { x: 12, y: 12, w: 68, h: 46 },  // 0: 상단 좌1
-      { x: 86, y: 12, w: 68, h: 46 },  // 1: 상단 좌2
-      { x: 166, y: 12, w: 68, h: 46 }, // 2: 상단 우1
-      { x: 240, y: 12, w: 68, h: 46 }, // 3: 상단 우2
-      { x: 12, y: 104, w: 68, h: 46 }, // 4: 하단 좌1
-      { x: 86, y: 104, w: 68, h: 46 }, // 5: 하단 좌2
-      { x: 166, y: 104, w: 68, h: 46 },// 6: 하단 우1
-      { x: 240, y: 104, w: 68, h: 46 } // 7: 하단 우2
-    ];
-
-    let roomDetails = [];
-
-    // 1. 도서관 (S1) 특화
-    if (bldg.id === 'S1') {
-      if (floorNum === 1) {
-        roomDetails = [
-          { name: '101 북카페', type: '휴게·음료', desc: '커피머신 및 자유 대화형 독서 공간' },
-          { name: '102 대출·반납', type: '안내데스크', desc: '도서 대출/반납 및 회원증 발급' },
-          { name: '103 전자신문존', type: '정보검색', desc: '국내외 일간지 및 전자간행물 열람' },
-          { name: '104 복사·인쇄실', type: '편의시설', desc: '무인 복합기 및 출력용 PC 구비' },
-          { name: '105 모바일게이트', type: '출입게이트', desc: '학생증 및 모바일 열람증 태그 입구' },
-          { name: '106 전시로비', type: '전시·문화', desc: '이달의 추천도서 큐레이션 전시' },
-          { name: '107 보관함실', type: '물품보관', desc: '사물함 및 대형 가방 보관소' },
-          { name: '108 공용화장실', type: '위생시설', desc: '남·여 화장실 및 장애인 편의시설' }
-        ];
-      } else if (floorNum === 2) {
-        roomDetails = [
-          { name: '201 제1자료실A', type: '인문·철학서가', desc: '인문학, 예술, 문학 전공 도서 보유' },
-          { name: '202 제1자료실B', type: '사회과학서가', desc: '사회, 경영, 법률 관련 도서 서가' },
-          { name: '203 스터디룸A', type: '그룹학습', desc: '4인~6인 예약제 토론 스터디룸' },
-          { name: '204 스터디룸B', type: '그룹학습', desc: '모니터 및 화이트보드 구비' },
-          { name: '205 개방열람석', type: '자율학습', desc: '콘센트형 1인 열람 테이블 구역' },
-          { name: '206 도서검색PC', type: '자료검색', desc: '도서 소장 위치 출력용 검색대' },
-          { name: '207 신착도서존', type: '신간열람', desc: '이번 주 입고된 신간 도서 코너' },
-          { name: '208 공용화장실', type: '위생시설', desc: '남·여 화장실 및 음수대' }
-        ];
-      } else {
-        roomDetails = [
-          { name: `${p}01 열람실A`, type: '집중자습', desc: '조용한 일반 자습 열람 좌석' },
-          { name: `${p}02 노트북실`, type: '기기이용', desc: '타이핑 및 노트북 전용 개방 열람실' },
-          { name: `${p}03 세미나룸`, type: '학술회의', desc: '교수 및 대학원생 프로젝트 세미나실' },
-          { name: `${p}04 스터디룸`, type: '그룹협업', desc: '예약제 조별과제 회의실' },
-          { name: `${p}05 서고구역`, type: '보존자료', desc: '학술지 및 정기간행물 보존 서가' },
-          { name: `${p}06 캐럴룸`, type: '1인집중석', desc: '개인 칸막이형 1인 캐럴 열람실' },
-          { name: `${p}07 휴게쉼터`, type: '휴게공간', desc: '자판기 및 폰부스 설치 쉼터' },
-          { name: `${p}08 공용화장실`, type: '위생시설', desc: '남·여 화장실 및 정수기' }
-        ];
-      }
-    }
-    // 2. 학생회관 (S2) 특화
-    else if (bldg.id === 'S2') {
-      if (floorNum === 1) {
-        roomDetails = [
-          { name: '101 학생식당', type: '푸드코트', desc: '일품코너, 찌개, 덮밥류 일일 학식 제공' },
-          { name: '102 교직원식당', type: '뷔페식', desc: '교직원 및 일반 학생 자율배식 식당' },
-          { name: '103 분식코너', type: '스낵류', desc: '라면, 김밥, 떡볶이 등 간식 코너' },
-          { name: '104 카페테리아', type: '커피·음료', desc: '테이크아웃 전문 학생 카페' },
-          { name: '105 무인식권기', type: '발권코너', desc: '키오스크 및 모바일 페이 결제' },
-          { name: '106 주방·퇴식구', type: '조리·반납', desc: '식기 반납 및 잔반 처리대' },
-          { name: '107 영양사실', type: '행정실', desc: '식당 관리 및 위생 점검실' },
-          { name: '108 공용화장실', type: '위생시설', desc: '식당 입구 손세정대 구비' }
-        ];
-      } else if (floorNum === 2) {
-        roomDetails = [
-          { name: '201 GS25편의점', type: '생필품', desc: '간식, 음료, 생필품 할인 매장' },
-          { name: '202 대학서점', type: '도서·문구', desc: '전공교재 및 교양 서적 판매처' },
-          { name: '203 인쇄·복사실', type: '제본·출력', desc: '보고서 출력 및 스프링 제본소' },
-          { name: '204 우체국출장', type: '우편금융', desc: '등기, 택배 접수 및 금융 업무' },
-          { name: '205 학생안경점', type: '안경·렌즈', desc: '시력검사 및 콘택트렌즈 할인점' },
-          { name: '206 여행·취업센터', type: '상담창구', desc: '어학연수 및 학생 취업 상담' },
-          { name: '207 휴게로비', type: '만남의장소', desc: '학생 소파 및 스마트폰 충전대' },
-          { name: '208 공용화장실', type: '위생시설', desc: '2층 남녀 화장실' }
-        ];
-      } else {
-        roomDetails = [
-          { name: `${p}01 동아리방A`, type: '동아리활동', desc: '공연·예술 분과 학생 동아리방' },
-          { name: `${p}02 동아리방B`, type: '동아리활동', desc: '학술·봉사 분과 학생 동아리방' },
-          { name: `${p}03 총학생회실`, type: '학생자치', desc: '총학생회 집행부 및 기획회의실' },
-          { name: `${p}04 방송국실`, type: '자치언론', desc: '학내 오디오/영상 방송 송출실' },
-          { name: `${p}05 학생상담센터`, type: '심리상담', desc: '전문 심리검사 및 1:1 상담실' },
-          { name: `${p}06 헬스체력단련`, type: '체육시설', desc: '러닝머신 및 웨이트 트레이닝 기구' },
-          { name: `${p}07 샤워실/탈의`, type: '편의시설', desc: '운동 후 온수 샤워 시설' },
-          { name: `${p}08 공용화장실`, type: '위생시설', desc: '남·여 화장실' }
-        ];
-      }
-    }
-    // 3. 일반 학과 및 연구/공학동 (N1~N13, S3~S11, D동)
-    else {
-      if (floorNum === 1) {
-        roomDetails = [
-          { name: '101 행정실', type: '학부사무', desc: '수강신청, 증명서, 학사상담 창구' },
-          { name: '102 메인로비', type: '중앙안내', desc: '게시판, 안내데스크, 휴게 벤치' },
-          { name: '103 대강의실', type: '전공강의', desc: '100인 수용 대형 멀티미디어 강의실' },
-          { name: '104 학생휴게실', type: '자율쉼터', desc: '전자레인지, 정수기, 충전기 구비' },
-          { name: '105 경비·방재실', type: '안전관리', desc: '건물 보안 및 소방 제어센터' },
-          { name: '106 세미나룸', type: '회의공간', desc: '학과 정기 회의 및 발표장' },
-          { name: '107 복사·인쇄코너', type: '출력시설', desc: '무인 프린트존 운영' },
-          { name: '108 남녀화장실', type: '위생시설', desc: '1층 장애인 겸용 화장실' }
-        ];
-      } else {
-        roomDetails = [
-          { name: `${p}01 대강의실`, type: '전공수업', desc: '빔프로젝터 및 전자교탁 구비 강의실' },
-          { name: `${p}02 전공실습실`, type: '컴퓨터실', desc: '고성능 워크스테이션 실습 환경' },
-          { name: `${p}03 중강의실`, type: '이론강의', desc: '50인 규모 전공/교양 강의실' },
-          { name: `${p}04 프로젝트룸`, type: '조별과제', desc: '팀플레이 협업 및 토의 공간' },
-          { name: `${p}05 교수연구실`, type: '연구면담', desc: '교수 집무실 및 학생 면담실' },
-          { name: `${p}06 대학원실습실`, type: '연구개발', desc: '석·박사 연구원 프로젝트룸' },
-          { name: `${p}07 학생자율실`, type: '스터디공간', desc: '공강 시간 자율 학습실' },
-          { name: `${p}08 남녀화장실`, type: '위생시설', desc: `${floorNum}층 남녀 화장실` }
-        ];
-      }
     }
 
-    return layouts.map((l, i) => ({
-      ...l,
-      name: roomDetails[i] ? roomDetails[i].name : `${p}0${i + 1}호`,
-      type: roomDetails[i] ? roomDetails[i].type : '강의실',
-      desc: roomDetails[i] ? roomDetails[i].desc : '전공 수업 및 자율 학습 공간'
-    }));
-  }
-
-  // --- 즐겨찾기 칩 목록 렌더링 ---
-  function renderFavorites() {
-    const container = document.getElementById('favorites-container');
-    container.innerHTML = '';
-
-    if (state.favorites.length === 0) {
-      const emptySpan = document.createElement('span');
-      emptySpan.style.fontSize = '11px';
-      emptySpan.style.color = '#94a3b8';
-      emptySpan.textContent = '★ 건물을 3회 이상 검색하거나 별표를 누르면 즐겨찾기가 등록됩니다.';
-      container.appendChild(emptySpan);
-      return;
-    }
-
-    state.favorites.forEach(bId => {
-      const b = getBuilding(bId);
-      const chip = document.createElement('button');
-      chip.className = `fav-chip ${state.selectedBldgId === b.id ? 'active' : ''}`;
-      chip.innerHTML = `★ ${b.code} ${b.name}`;
-      chip.addEventListener('click', () => {
-        selectBuilding(b.id, false);
-      });
-      container.appendChild(chip);
-    });
-  }
-
-  // --- 요일별 수업 목록 렌더링 ---
-  function renderSchedule() {
-    const tabs = document.querySelectorAll('.day-tab');
-    tabs.forEach(t => {
-      if (t.getAttribute('data-day') === state.selectedDayTab) {
-        t.classList.add('active');
-      } else {
-        t.classList.remove('active');
-      }
-    });
-
-    const listEl = document.getElementById('class-list');
-    listEl.innerHTML = '';
-
-    // 주말 처리
-    if (state.selectedDayTab === '토' || state.selectedDayTab === '일') {
-      listEl.innerHTML = `
-        <div class="empty-state">
-          🏖️ 오늘은 주말(${state.selectedDayTab}요일)입니다!<br>
-          정규 수업이 없으므로 중앙도서관(S1)이나 학생회관(S2) 시설 위치를 확인해 보세요.
-        </div>
-      `;
-      return;
-    }
-
-    const currentClasses = state.classes.filter(c => c.day === state.selectedDayTab);
-
-    if (currentClasses.length === 0) {
-      listEl.innerHTML = `
-        <div class="empty-state">
-          ${state.selectedDayTab}요일에는 등록된 수업이 없습니다.<br>
-          상단의 <strong>[+ 수업 추가]</strong> 버튼을 눌러 수업을 등록해 보세요!
-        </div>
-      `;
-      return;
-    }
-
-    currentClasses.forEach(item => {
-      const bldg = getBuilding(item.bldgId);
-      const div = document.createElement('div');
-      div.className = 'class-card';
-      div.innerHTML = `
-        <div class="class-info">
-          <span class="class-time">⏰ ${escapeHtml(item.time || '시간 미지정')}</span>
-          <span class="class-name">${escapeHtml(item.name)}</span>
-          <span class="class-loc">📍 ${bldg.code} ${bldg.name} (${escapeHtml(item.room)})</span>
-        </div>
-        <div class="class-actions">
-          <button class="btn-find-door" data-bldg="${bldg.id}">출입구 지도</button>
-          <button class="btn-del-class" data-id="${item.id}" title="수업 삭제">×</button>
-        </div>
-      `;
-      listEl.appendChild(div);
-    });
-  }
-
-  // --- 오늘 헤더 알림 배지 갱신 ---
-  function updateTodayPill() {
-    const currentDay = DAYS_ORDER[state.currentDayIdx];
-    const pill = document.getElementById('header-today-pill');
-    pill.textContent = `오늘: ${currentDay}요일`;
-  }
-
-  function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
-
-  // --- 이벤트 리스너 바인딩 ---
-
-  // 지도 건물 클릭 이벤트 (전체 26개 동)
-  document.querySelectorAll('.bldg-group').forEach(group => {
-    group.addEventListener('click', () => {
-      const bldgId = group.getAttribute('data-id');
-      selectBuilding(bldgId, true);
-    });
-  });
-
-  // 구역 필터 버튼 클릭
-  document.querySelectorAll('.zone-filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.zone-filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const zone = btn.getAttribute('data-zone');
-      const viewport = document.getElementById('map-viewport');
-      if (zone === 'all') {
-        viewport.scrollTo({ left: 100, top: 80, behavior: 'smooth' });
-      } else if (zone === 'N') {
-        viewport.scrollTo({ left: 80, top: 20, behavior: 'smooth' });
-      } else if (zone === 'S') {
-        viewport.scrollTo({ left: 80, top: 240, behavior: 'smooth' });
-      } else if (zone === 'D') {
-        viewport.scrollTo({ left: 380, top: 200, behavior: 'smooth' });
-      }
-    });
-  });
-
-  // 검색창 실시간 필터 및 드롭다운
-  const searchInput = document.getElementById('input-search');
-  const searchClear = document.getElementById('btn-clear-search');
-  const searchDropdown = document.getElementById('search-dropdown');
-
-  searchInput.addEventListener('input', () => {
-    const val = searchInput.value.trim().toLowerCase();
-    if (!val) {
-      searchClear.style.display = 'none';
-      searchDropdown.style.display = 'none';
-      return;
-    }
-
-    searchClear.style.display = 'block';
-    const matches = CAMPUS_BUILDINGS.filter(b => 
-      b.code.toLowerCase().includes(val) || 
-      b.name.toLowerCase().includes(val) ||
-      b.zone.toLowerCase().includes(val)
-    );
-
-    if (matches.length === 0) {
-      searchDropdown.innerHTML = `<div class="search-dropdown-item" style="color: #94a3b8;">일치하는 건물이 없습니다. (N1~N13, S0~S11, D동)</div>`;
-      searchDropdown.style.display = 'block';
-      return;
-    }
-
-    searchDropdown.innerHTML = matches.map(b => `
-      <div class="search-dropdown-item" data-bldg="${b.id}">
-        <div>
-          <span class="search-item-title">${b.code} ${b.name}</span>
-          <div class="search-item-sub">${b.zone} · 출입구 ${b.doors.length}개 안내</div>
-        </div>
-        <span style="font-size: 11px; color: #2563eb; font-weight: 700;">지도 보기 ></span>
-      </div>
-    `).join('');
-    searchDropdown.style.display = 'block';
-  });
-
-  searchClear.addEventListener('click', () => {
-    searchInput.value = '';
-    searchClear.style.display = 'none';
-    searchDropdown.style.display = 'none';
-    searchInput.focus();
-  });
-
-  searchDropdown.addEventListener('click', (e) => {
-    const item = e.target.closest('.search-dropdown-item');
-    if (!item) return;
-    const bldgId = item.getAttribute('data-bldg');
-    if (bldgId) {
-      selectBuilding(bldgId, true);
-      searchInput.value = '';
-      searchInput.blur();
-      searchClear.style.display = 'none';
-      searchDropdown.style.display = 'none';
-      showToast(`${getBuilding(bldgId).name} 출입구 안내로 이동했습니다.`);
-    }
-  });
-
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.search-section')) {
-      searchDropdown.style.display = 'none';
-    }
-  });
-
-  // 즐겨찾기 별표 토글 버튼
-  document.getElementById('btn-toggle-favorite').addEventListener('click', () => {
-    const curId = state.selectedBldgId;
-    const idx = state.favorites.indexOf(curId);
-    if (idx > -1) {
-      state.favorites.splice(idx, 1);
-      showToast('즐겨찾기에서 해제되었습니다.');
-    } else {
-      state.favorites.push(curId);
-      showToast('즐겨찾기에 등록되었습니다!');
-    }
-    saveState();
-    renderBldgInfoCard(getBuilding(curId));
-    renderFavorites();
-  });
-
-  // [버튼 클릭 시에만 활성화] 출입구 안내 모달 열기/닫기
-  const modalDoor = document.getElementById('modal-door-info');
-  document.getElementById('btn-open-door-modal').addEventListener('click', () => {
-    modalDoor.classList.add('active');
-  });
-  document.getElementById('btn-close-door-modal').addEventListener('click', () => {
-    modalDoor.classList.remove('active');
-  });
-  document.getElementById('btn-confirm-door-modal').addEventListener('click', () => {
-    modalDoor.classList.remove('active');
-  });
-  modalDoor.addEventListener('click', (e) => {
-    if (e.target === modalDoor) modalDoor.classList.remove('active');
-  });
-
-  // [버튼 클릭 시에만 활성화] 층별 상세 지도 모달 열기/닫기
-  const modalFloor = document.getElementById('modal-floor-plan');
-  document.getElementById('btn-open-floor-modal').addEventListener('click', () => {
-    const bldg = getBuilding(state.selectedBldgId);
-    renderFloorTabs(bldg);
-    renderFloorPlan(bldg, state.selectedFloor || '1F');
-    modalFloor.classList.add('active');
-  });
-  document.getElementById('btn-close-floor-modal').addEventListener('click', () => {
-    modalFloor.classList.remove('active');
-  });
-  document.getElementById('btn-confirm-floor-modal').addEventListener('click', () => {
-    modalFloor.classList.remove('active');
-  });
-  modalFloor.addEventListener('click', (e) => {
-    if (e.target === modalFloor) modalFloor.classList.remove('active');
-  });
-
-  // 요일 탭 클릭
-  document.getElementById('day-tabs').addEventListener('click', (e) => {
-    const tab = e.target.closest('.day-tab');
-    if (!tab) return;
-    state.selectedDayTab = tab.getAttribute('data-day');
-    saveState();
-    renderSchedule();
-  });
-
-  // 수업 목록 액션 위임 (출입구 지도 보기 / 삭제)
-  document.getElementById('class-list').addEventListener('click', (e) => {
-    const findDoorBtn = e.target.closest('.btn-find-door');
-    if (findDoorBtn) {
-      const bldgId = findDoorBtn.getAttribute('data-bldg');
-      selectBuilding(bldgId, true);
-      showToast(`📍 ${getBuilding(bldgId).name} 출입구 위치를 지도에 표시했습니다.`);
-      window.scrollTo({ top: 120, behavior: 'smooth' });
-      return;
-    }
-
-    const delBtn = e.target.closest('.btn-del-class');
-    if (delBtn) {
-      const id = delBtn.getAttribute('data-id');
-      if (confirm('이 수업을 시간표에서 삭제할까요?')) {
-        state.classes = state.classes.filter(c => c.id !== id);
+    /* 시간표 수업 삭제 */
+    function deleteSchedule(scheduleId) {
+      const target = state.schedules.find(s => s.id === scheduleId);
+      const name = target ? target.subject : "수업";
+      if (confirm(`"${name}" 수업을 시간표에서 삭제하시겠습니까?`)) {
+        state.schedules = state.schedules.filter(s => s.id !== scheduleId);
+        renderTodaySchedules();
         saveState();
-        renderSchedule();
-        showToast('수업이 삭제되었습니다.');
+        showToast(`🗑️ [${name}] 수업이 삭제되었습니다.`);
       }
     }
-  });
 
-  // 수업 추가 모달
-  const modalAdd = document.getElementById('modal-add-class');
-  document.getElementById('btn-open-add-modal').addEventListener('click', () => {
-    const selectBldg = document.getElementById('select-class-bldg');
-    selectBldg.innerHTML = CAMPUS_BUILDINGS.map(b => 
-      `<option value="${b.id}" ${b.id === state.selectedBldgId ? 'selected' : ''}>${b.code} ${b.name} (${b.zone})</option>`
-    ).join('');
-
-    document.getElementById('select-modal-day').value = (state.selectedDayTab === '토' || state.selectedDayTab === '일') ? '월' : state.selectedDayTab;
-    document.getElementById('input-class-name').value = '';
-    document.getElementById('input-class-room').value = '';
-    document.getElementById('input-class-time').value = '';
-    modalAdd.classList.add('active');
-  });
-
-  document.getElementById('btn-modal-cancel').addEventListener('click', () => {
-    modalAdd.classList.remove('active');
-  });
-
-  document.getElementById('btn-modal-submit').addEventListener('click', () => {
-    const day = document.getElementById('select-modal-day').value;
-    const name = document.getElementById('input-class-name').value.trim();
-    const bldgId = document.getElementById('select-class-bldg').value;
-    const room = document.getElementById('input-class-room').value.trim();
-    const time = document.getElementById('input-class-time').value.trim();
-
-    if (!name) {
-      alert('강의명을 입력해 주세요.');
-      document.getElementById('input-class-name').focus();
-      return;
-    }
-    if (!room) {
-      alert('강의실 호수를 입력해 주세요 (예: 402호).');
-      document.getElementById('input-class-room').focus();
-      return;
+    /* 시간표 카드에서 바로 길안내 클릭 */
+    function navigateToScheduleRoom(roomId) {
+      for (let f = 1; f <= 7; f++) {
+        const match = S3_FLOORS_DATA[f].rooms.find(r => r.id === roomId);
+        if (match) {
+          state.selectedRoomId = roomId;
+          switchFloor(f);
+          showToast(`🧭 오늘의 수업: [${f}층] ${roomId}호 길안내를 시작합니다!`);
+          window.scrollTo({ top: 120, behavior: "smooth" });
+          return;
+        }
+      }
+      showToast(`⚠️ ${roomId}호 평면도를 찾을 수 없습니다.`);
     }
 
-    const newClass = {
-      id: 'c_' + Date.now(),
-      day,
-      name,
-      bldgId,
-      room,
-      time: time || '시간 미지정'
-    };
+    /* 시간표 새 강의 등록 */
+    function addSchedule() {
+      const day = document.getElementById("input-day").value;
+      const time = document.getElementById("input-time").value.trim() || "시간 미정";
+      const subject = document.getElementById("input-subject").value.trim();
+      const room = document.getElementById("input-room").value.trim().replace(/[^0-9]/g, "");
 
-    state.classes.push(newClass);
-    state.selectedDayTab = day;
-    saveState();
-    modalAdd.classList.remove('active');
-    renderSchedule();
-    showToast(`${day}요일 [${name}] 수업이 등록되었습니다!`);
-  });
+      if (!subject || !room) {
+        alert("과목명과 강의실 호수를 정확히 입력해주세요.");
+        return;
+      }
 
-  // 5. 테스트 & 재조율: 다음 날로 이동
-  document.getElementById('btn-next-day').addEventListener('click', () => {
-    state.currentDayIdx = (state.currentDayIdx + 1) % DAYS_ORDER.length;
-    const nextDay = DAYS_ORDER[state.currentDayIdx];
-    updateTodayPill();
+      state.schedules.push({
+        id: Date.now(),
+        day: day,
+        time: time,
+        subject: subject,
+        room: room
+      });
 
-    if (nextDay === '토' || nextDay === '일') {
-      state.selectedDayTab = nextDay;
-      renderSchedule();
-      showToast(`📅 ${nextDay}요일로 이동! 주말에는 수업이 없습니다.`);
-    } else {
-      state.selectedDayTab = nextDay;
-      const todaysClasses = state.classes.filter(c => c.day === nextDay);
-      if (todaysClasses.length > 0) {
-        selectBuilding(todaysClasses[0].bldgId, false);
-        showToast(`📅 ${nextDay}요일로 이동! 첫 수업 [${todaysClasses[0].name}] 출입구를 표시합니다.`);
+      document.getElementById("input-time").value = "";
+      document.getElementById("input-subject").value = "";
+      document.getElementById("input-room").value = "";
+
+      renderTodaySchedules();
+      saveState();
+      showToast(`✅ ${day}요일 [${subject}] 강의가 등록되었습니다.`);
+    }
+
+    /* ========================================================
+       15. AGENTS.md 필수 테스트 버튼 핸들러
+       ======================================================== */
+    // 1. 다음 날로 이동
+    function handleNextDay() {
+      state.currentDayIndex = (state.currentDayIndex + 1) % 7;
+      const nextDay = DAYS[state.currentDayIndex];
+      renderTodaySchedules();
+
+      // 변경된 요일의 첫 번째 수업으로 자동 길안내
+      const todayList = state.schedules.filter(s => s.day === nextDay);
+      if (todayList.length > 0) {
+        navigateToScheduleRoom(todayList[0].room);
       } else {
-        showToast(`📅 ${nextDay}요일로 이동했습니다. 등록된 수업이 없습니다.`);
+        showToast(`📅 ${nextDay}요일로 이동했습니다. (등록된 수업 없음)`);
       }
-      renderSchedule();
+      saveState();
     }
-    saveState();
-  });
 
-  // 테스트: 처음부터 다시 (초기화)
-  document.getElementById('btn-reset-app').addEventListener('click', () => {
-    if (!confirm('모든 데이터를 초기 상태로 되돌릴까요?\n(직접 등록한 수업과 검색 기록이 초기화됩니다)')) return;
+    // 2. 처음부터 다시 (초기화)
+    function handleReset() {
+      if (confirm("저장된 모든 데이터를 지우고 처음 상태로 돌아가시겠습니까?")) {
+        localStorage.removeItem(STORAGE_KEY);
+        state = {
+          currentFloor: 3,
+          selectedRoomId: "301",
+          startLoc: "EV",
+          currentDayIndex: 0,
+          recents: ["301", "204", "108"],
+          favorites: ["301"],
+          schedules: DEFAULT_SCHEDULES
+        };
+        switchFloor(3);
+        renderRecentChips();
+        renderTodaySchedules();
+        showToast("🔄 모든 데이터가 초기 상태로 리셋되었습니다.");
+      }
+    }
 
-    localStorage.removeItem(STORAGE_KEY);
-    state = {
-      currentDayIdx: 0,
-      selectedBldgId: 'N11',
-      selectedDayTab: '월',
-      searchCounts: {},
-      favorites: ['N11', 'S1', 'S2'],
-      classes: [...DEFAULT_CLASSES]
+    /* 토스트 알림 */
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      toast.innerText = msg;
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2200);
+    }
+
+    /* 앱 기동 */
+    window.onload = () => {
+      loadState();
+      switchFloor(state.currentFloor);
+      renderRecentChips();
+      renderTodaySchedules();
+      document.getElementById("start-loc-select").value = state.startLoc;
     };
-    init();
-    showToast('전체 건물 기본 데이터로 초기화되었습니다.');
-  });
-
-  // 초기 시작
-  function init() {
-    loadState();
-    updateTodayPill();
-    selectBuilding(state.selectedBldgId || 'N11', false);
-    renderFavorites();
-    renderSchedule();
-  }
-
-  init();
-</script>
-
+  </script>
 </body>
 </html>
