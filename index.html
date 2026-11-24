@@ -443,8 +443,7 @@
     .detail-top-row {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 8px;
+      align-items: center;
     }
     .detail-badge-group {
       display: flex;
@@ -777,9 +776,6 @@
           <div class="detail-room-name" id="detail-name">S3-301호 강의실</div>
         </div>
         <button class="btn-fav-star" id="btn-fav" onclick="toggleFavorite()" title="즐겨찾기">★</button>
-      </div>
-      <div class="detail-direction-guide" id="detail-guide">
-        💡 <strong>방향 팁:</strong> 중앙 엘리베이터에서 내리면 오른쪽 복도 끝에 바로 있습니다. 중간 계단 이용 시 문 열고 바로 좌측입니다.
       </div>
     </div>
 
@@ -1167,7 +1163,6 @@
         document.getElementById("detail-name").innerText = "강의실을 선택해주세요";
         document.getElementById("detail-type").innerText = "평면도 안내";
         document.getElementById("detail-floor").innerText = `${state.currentFloor}층 전체`;
-        document.getElementById("detail-guide").innerHTML = "💡 <strong>안내:</strong> 평면도에서 원하는 강의실 블록을 터치하면 찾아가는 방향과 상세 정보가 표시됩니다.";
         document.getElementById("btn-fav").classList.remove("active");
         return;
       }
@@ -1216,7 +1211,6 @@
       document.getElementById("detail-name").innerText = `S3-${room.name}`;
       document.getElementById("detail-type").innerText = room.type;
       document.getElementById("detail-floor").innerText = `${state.currentFloor}층 위치`;
-      document.getElementById("detail-guide").innerHTML = `💡 <strong>찾아가는 팁:</strong> ${room.guide}`;
 
       // 즐겨찾기 별표 상태
       const isFav = state.favorites.includes(room.id);
