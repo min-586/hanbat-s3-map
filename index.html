@@ -234,16 +234,38 @@
     .floor-tab-btn {
       flex: 1;
       min-width: 44px;
-      padding: 8px 4px;
+      padding: 6px 2px 5px;
       text-align: center;
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .floor-tab-btn .floor-tab-num {
       font-size: 13px;
       font-weight: 800;
       color: #64748b;
-      cursor: pointer;
-      transition: all 0.15s ease;
+      line-height: 1.1;
+    }
+    .floor-tab-btn.active .floor-tab-num {
+      color: #ffffff;
+    }
+    .floor-tab-btn .floor-fav-stars {
+      font-size: 9.5px;
+      height: 12px;
+      line-height: 12px;
+      color: #f59e0b;
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      display: inline-block;
+    }
+    .floor-tab-btn.active .floor-fav-stars {
+      color: #fef08a;
     }
     .floor-tab-btn.active {
       background: var(--primary);
@@ -718,13 +740,34 @@
 
     <!-- 4. 층수 퀵 셀렉터 (1F ~ 7F 탭) -->
     <div class="floor-tabs-wrapper">
-      <button class="floor-tab-btn" onclick="switchFloor(1)" id="tab-1F">1F</button>
-      <button class="floor-tab-btn" onclick="switchFloor(2)" id="tab-2F">2F</button>
-      <button class="floor-tab-btn active" onclick="switchFloor(3)" id="tab-3F">3F</button>
-      <button class="floor-tab-btn" onclick="switchFloor(4)" id="tab-4F">4F</button>
-      <button class="floor-tab-btn" onclick="switchFloor(5)" id="tab-5F">5F</button>
-      <button class="floor-tab-btn" onclick="switchFloor(6)" id="tab-6F">6F</button>
-      <button class="floor-tab-btn" onclick="switchFloor(7)" id="tab-7F">7F</button>
+      <button class="floor-tab-btn" onclick="switchFloor(1)" id="tab-1F">
+        <span class="floor-tab-num">1F</span>
+        <span class="floor-fav-stars" id="floor-fav-1F"></span>
+      </button>
+      <button class="floor-tab-btn" onclick="switchFloor(2)" id="tab-2F">
+        <span class="floor-tab-num">2F</span>
+        <span class="floor-fav-stars" id="floor-fav-2F"></span>
+      </button>
+      <button class="floor-tab-btn active" onclick="switchFloor(3)" id="tab-3F">
+        <span class="floor-tab-num">3F</span>
+        <span class="floor-fav-stars" id="floor-fav-3F"></span>
+      </button>
+      <button class="floor-tab-btn" onclick="switchFloor(4)" id="tab-4F">
+        <span class="floor-tab-num">4F</span>
+        <span class="floor-fav-stars" id="floor-fav-4F"></span>
+      </button>
+      <button class="floor-tab-btn" onclick="switchFloor(5)" id="tab-5F">
+        <span class="floor-tab-num">5F</span>
+        <span class="floor-fav-stars" id="floor-fav-5F"></span>
+      </button>
+      <button class="floor-tab-btn" onclick="switchFloor(6)" id="tab-6F">
+        <span class="floor-tab-num">6F</span>
+        <span class="floor-fav-stars" id="floor-fav-6F"></span>
+      </button>
+      <button class="floor-tab-btn" onclick="switchFloor(7)" id="tab-7F">
+        <span class="floor-tab-num">7F</span>
+        <span class="floor-fav-stars" id="floor-fav-7F"></span>
+      </button>
     </div>
 
     <!-- 5. 내 출발 위치 선택 -->
@@ -1238,7 +1281,7 @@
 
       renderFloorCanvas();
       updateDirectionGuide();
-      renderFloorCanvas();
+      updateFloorFavBadges();
       saveState();
     }
 
@@ -1261,7 +1304,7 @@
       state.startLoc = document.getElementById("start-loc-select").value;
       renderFloorCanvas();
       updateDirectionGuide();
-      renderFloorCanvas();
+      updateFloorFavBadges();
       saveState();
       showToast("📍 내 출발 위치가 변경되었습니다.");
     }
@@ -1316,7 +1359,30 @@
       }
       updateDirectionGuide();
       renderFloorCanvas();
+      updateFloorFavBadges();
       saveState();
+    }
+
+    /* 층별 탭 내 즐겨찾기 별표(★) 표시 갱신 */
+    function updateFloorFavBadges() {
+      for (let f = 1; f <= 7; f++) {
+        const badgeEl = document.getElementById(`floor-fav-${f}F`);
+        if (!badgeEl) continue;
+
+        const floorRooms = S3_FLOORS_DATA[f].rooms;
+        const count = state.favorites.filter(id => floorRooms.some(r => r.id === id)).length;
+
+        if (count === 0) {
+          badgeEl.innerHTML = "";
+          badgeEl.removeAttribute("title");
+        } else if (count <= 3) {
+          badgeEl.innerHTML = "★".repeat(count);
+          badgeEl.title = `${f}층 즐겨찾기 강의실 ${count}개`;
+        } else {
+          badgeEl.innerHTML = `★${count}`;
+          badgeEl.title = `${f}층 즐겨찾기 강의실 ${count}개`;
+        }
+      }
     }
 
     /* 최근 검색 칩 렌더링 */
@@ -1479,6 +1545,7 @@
         switchFloor(1);
         renderRecentChips();
         renderTodaySchedules();
+        updateFloorFavBadges();
         showToast("🔄 모든 데이터가 초기 상태로 리셋되었습니다.");
       }
     }
@@ -1499,6 +1566,7 @@
       switchFloor(state.currentFloor);
       renderRecentChips();
       renderTodaySchedules();
+      updateFloorFavBadges();
       document.getElementById("start-loc-select").value = state.startLoc;
     };
   </script>
