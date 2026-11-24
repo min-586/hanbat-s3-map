@@ -724,6 +724,7 @@
           <div class="legend-item"><span class="legend-dot" style="background:#93c5fd;"></span>강의실</div>
           <div class="legend-item"><span class="legend-dot" style="background:#fcd34d;"></span>EV/계단</div>
           <div class="legend-item"><span class="legend-dot" style="background:#fecdd3;"></span>화장실</div>
+          <div class="legend-item"><span style="color:#ca8a04; font-size:10px;">★</span>즐겨찾기</div>
         </div>
       </div>
 
@@ -1086,12 +1087,32 @@
       // 3. 호실 블록들
       floorData.rooms.forEach(room => {
         const isSelected = room.id === state.selectedRoomId;
+        const isFav = state.favorites.includes(room.id);
         const selectedClass = isSelected ? "selected" : "";
         const rx = room.rx || 6;
+
+        // 즐겨찾기 호실은 테두리를 따뜻한 골드 옐로우로 표시
+        const strokeColor = isSelected ? "#2563eb" : (isFav ? "#ca8a04" : room.stroke);
+        const strokeW = isSelected ? "3.5" : (isFav ? "2" : "1.5");
+
+        // 즐겨찾기 호실 우측 상단에 노란색 별(★) 배지 표시
+        let favBadge = "";
+        if (isFav) {
+          const badgeX = room.x + room.w - 7;
+          const badgeY = room.y + 7;
+          favBadge = `
+            <g class="svg-fav-badge" pointer-events="none">
+              <circle cx="${badgeX}" cy="${badgeY}" r="5" fill="#fef08a" stroke="#ca8a04" stroke-width="0.8"/>
+              <text x="${badgeX}" y="${badgeY + 2.5}" text-anchor="middle" font-size="7" font-weight="900" fill="#a16207">★</text>
+            </g>
+          `;
+        }
+
         html += `
           <g class="svg-room ${selectedClass}" onclick="handleSelectRoom('${room.id}')">
-            <rect x="${room.x}" y="${room.y}" width="${room.w}" height="${room.h}" rx="${rx}" fill="${room.fill}" stroke="${room.stroke}" stroke-width="1.5"/>
+            <rect x="${room.x}" y="${room.y}" width="${room.w}" height="${room.h}" rx="${rx}" fill="${room.fill}" stroke="${strokeColor}" stroke-width="${strokeW}"/>
             <text x="${room.x + room.w/2}" y="${room.y + room.h/2 + 3.5}" text-anchor="middle" class="svg-room-label" fill="#1e293b">${room.id}</text>
+            ${favBadge}
           </g>
         `;
       });
@@ -1223,6 +1244,7 @@
 
       renderFloorCanvas();
       updateDirectionGuide();
+      renderFloorCanvas();
       saveState();
     }
 
@@ -1245,6 +1267,7 @@
       state.startLoc = document.getElementById("start-loc-select").value;
       renderFloorCanvas();
       updateDirectionGuide();
+      renderFloorCanvas();
       saveState();
       showToast("📍 내 출발 위치가 변경되었습니다.");
     }
@@ -1298,6 +1321,7 @@
         showToast(`⭐ ${roomId}호 즐겨찾기에 등록되었습니다!`);
       }
       updateDirectionGuide();
+      renderFloorCanvas();
       saveState();
     }
 
