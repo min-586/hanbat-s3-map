@@ -683,77 +683,11 @@
     <!-- 최근 찾은 강의실 칩 -->
     <div class="recent-chips-bar" id="recent-chips-container"></div>
 
-    <!-- 3. 층수 퀵 셀렉터 (1F ~ 7F 탭) -->
-    <div class="floor-tabs-wrapper">
-      <button class="floor-tab-btn" onclick="switchFloor(1)" id="tab-1F">1F</button>
-      <button class="floor-tab-btn" onclick="switchFloor(2)" id="tab-2F">2F</button>
-      <button class="floor-tab-btn active" onclick="switchFloor(3)" id="tab-3F">3F</button>
-      <button class="floor-tab-btn" onclick="switchFloor(4)" id="tab-4F">4F</button>
-      <button class="floor-tab-btn" onclick="switchFloor(5)" id="tab-5F">5F</button>
-      <button class="floor-tab-btn" onclick="switchFloor(6)" id="tab-6F">6F</button>
-      <button class="floor-tab-btn" onclick="switchFloor(7)" id="tab-7F">7F</button>
-    </div>
-
-    <!-- 4. 내 출발 위치 선택 -->
-    <div class="start-loc-card">
-      <span class="start-loc-label">📍 내 출발 위치:</span>
-      <select id="start-loc-select" class="start-loc-select" onchange="handleStartLocChange()">
-        <option value="EV">🛗 중앙 엘리베이터 앞</option>
-        <option value="MID_STAIR">🪜 중간 계단</option>
-        <option value="RIGHT_STAIR">🪜 우측 끝 계단</option>
-        <option value="MAIN_GATE">🚪 1층 정문 현관</option>
-      </select>
-    </div>
-
-    <!-- 5. 학생 맞춤 친절한 실내 방향 안내 배너 -->
-    <div class="guide-banner" id="guide-banner">
-      <div class="guide-icon-box" id="guide-icon">👉</div>
-      <div class="guide-text-box">
-        <div class="guide-target-room" id="guide-target">S3-301호 컴퓨터실습실</div>
-        <div class="guide-instruction" id="guide-text">엘리베이터 하차 ➡️ 오른쪽 복도로 10걸음 직진!</div>
-      </div>
-    </div>
-
-    <!-- 6. 인터랙티브 파스텔 SVG 평면도 뷰어 -->
-    <div class="map-container">
-      <div class="map-header-row">
-        <div class="map-floor-title" id="canvas-floor-title">
-          <span>📐 S3 3층 평면도</span>
-        </div>
-        <div class="map-legend">
-          <div class="legend-item"><span class="legend-dot" style="background:#93c5fd;"></span>강의실</div>
-          <div class="legend-item"><span class="legend-dot" style="background:#fcd34d;"></span>EV/계단</div>
-          <div class="legend-item"><span class="legend-dot" style="background:#fecdd3;"></span>화장실</div>
-          <div class="legend-item"><span style="color:#ca8a04; font-size:10px;">★</span>즐겨찾기</div>
-        </div>
-      </div>
-
-      <!-- 반응형 SVG 평면도 캔버스 -->
-      <svg id="s3-svg-canvas" class="svg-floor-canvas" viewBox="0 0 380 240"></svg>
-    </div>
-
-    <!-- 7. 강의실 상세 정보 카드 -->
-    <div class="room-detail-card" id="room-detail-card">
-      <div class="detail-top-row">
-        <div>
-          <div class="detail-badge-group">
-            <span class="detail-type-badge" id="detail-type">전산실습실</span>
-            <span style="font-size:11px; color:#64748b;" id="detail-floor">3층 북서측</span>
-          </div>
-          <div class="detail-room-name" id="detail-name">S3-301호 강의실</div>
-        </div>
-        <button class="btn-fav-star" id="btn-fav" onclick="toggleFavorite()" title="즐겨찾기">★</button>
-      </div>
-      <div class="detail-direction-guide" id="detail-guide">
-        💡 <strong>방향 팁:</strong> 중앙 엘리베이터에서 내리면 오른쪽 복도 끝에 바로 있습니다. 중간 계단 이용 시 문 열고 바로 좌측입니다.
-      </div>
-    </div>
-
-    <!-- 8. 오늘의 수업 시간표 카드 & 시간표 등록 -->
-    <section class="timetable-section">
+    <!-- 3. 오늘의 수업 시간표 카드 & 시간표 등록 (상단 우선 배치) -->
+    <section class="timetable-section" style="margin-top: 6px; margin-bottom: 10px;">
       <div class="section-title-row">
         <div class="section-title">
-          <span>📅 오늘의 수업 및 강의실 연동</span>
+          <span>📅 오늘의 수업 및 바로 길안내</span>
         </div>
         <span style="font-size:11px; color:#2563eb; font-weight:700;" id="today-schedule-count">2개 강의</span>
       </div>
@@ -782,6 +716,72 @@
         <button class="btn-submit-schedule" onclick="addSchedule()">시간표에 등록하기</button>
       </div>
     </section>
+
+    <!-- 4. 층수 퀵 셀렉터 (1F ~ 7F 탭) -->
+    <div class="floor-tabs-wrapper">
+      <button class="floor-tab-btn" onclick="switchFloor(1)" id="tab-1F">1F</button>
+      <button class="floor-tab-btn" onclick="switchFloor(2)" id="tab-2F">2F</button>
+      <button class="floor-tab-btn active" onclick="switchFloor(3)" id="tab-3F">3F</button>
+      <button class="floor-tab-btn" onclick="switchFloor(4)" id="tab-4F">4F</button>
+      <button class="floor-tab-btn" onclick="switchFloor(5)" id="tab-5F">5F</button>
+      <button class="floor-tab-btn" onclick="switchFloor(6)" id="tab-6F">6F</button>
+      <button class="floor-tab-btn" onclick="switchFloor(7)" id="tab-7F">7F</button>
+    </div>
+
+    <!-- 5. 내 출발 위치 선택 -->
+    <div class="start-loc-card">
+      <span class="start-loc-label">📍 내 출발 위치:</span>
+      <select id="start-loc-select" class="start-loc-select" onchange="handleStartLocChange()">
+        <option value="EV">🛗 중앙 엘리베이터 앞</option>
+        <option value="MID_STAIR">🪜 중간 계단</option>
+        <option value="RIGHT_STAIR">🪜 우측 끝 계단</option>
+        <option value="MAIN_GATE">🚪 1층 정문 현관</option>
+      </select>
+    </div>
+
+    <!-- 6. 학생 맞춤 친절한 실내 방향 안내 배너 -->
+    <div class="guide-banner" id="guide-banner">
+      <div class="guide-icon-box" id="guide-icon">👉</div>
+      <div class="guide-text-box">
+        <div class="guide-target-room" id="guide-target">S3-301호 컴퓨터실습실</div>
+        <div class="guide-instruction" id="guide-text">엘리베이터 하차 ➡️ 오른쪽 복도로 10걸음 직진!</div>
+      </div>
+    </div>
+
+    <!-- 7. 인터랙티브 파스텔 SVG 평면도 뷰어 -->
+    <div class="map-container">
+      <div class="map-header-row">
+        <div class="map-floor-title" id="canvas-floor-title">
+          <span>📐 S3 3층 평면도</span>
+        </div>
+        <div class="map-legend">
+          <div class="legend-item"><span class="legend-dot" style="background:#93c5fd;"></span>강의실</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#fcd34d;"></span>EV/계단</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#fecdd3;"></span>화장실</div>
+          <div class="legend-item"><span style="color:#ca8a04; font-size:10px;">★</span>즐겨찾기</div>
+        </div>
+      </div>
+
+      <!-- 반응형 SVG 평면도 캔버스 -->
+      <svg id="s3-svg-canvas" class="svg-floor-canvas" viewBox="0 0 380 240"></svg>
+    </div>
+
+    <!-- 8. 강의실 상세 정보 카드 -->
+    <div class="room-detail-card" id="room-detail-card">
+      <div class="detail-top-row">
+        <div>
+          <div class="detail-badge-group">
+            <span class="detail-type-badge" id="detail-type">전산실습실</span>
+            <span style="font-size:11px; color:#64748b;" id="detail-floor">3층 북서측</span>
+          </div>
+          <div class="detail-room-name" id="detail-name">S3-301호 강의실</div>
+        </div>
+        <button class="btn-fav-star" id="btn-fav" onclick="toggleFavorite()" title="즐겨찾기">★</button>
+      </div>
+      <div class="detail-direction-guide" id="detail-guide">
+        💡 <strong>방향 팁:</strong> 중앙 엘리베이터에서 내리면 오른쪽 복도 끝에 바로 있습니다. 중간 계단 이용 시 문 열고 바로 좌측입니다.
+      </div>
+    </div>
 
     <!-- 토스트 팝업 알림 -->
     <div id="toast" class="toast-popup">즐겨찾기에 등록되었습니다.</div>
@@ -1411,7 +1411,10 @@
           state.selectedRoomId = roomId;
           switchFloor(f);
           showToast(`🧭 오늘의 수업: [${f}층] ${roomId}호 길안내를 시작합니다!`);
-          window.scrollTo({ top: 120, behavior: "smooth" });
+          const mapEl = document.getElementById("s3-svg-canvas");
+          if (mapEl) {
+            mapEl.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
           return;
         }
       }
