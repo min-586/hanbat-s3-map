@@ -695,7 +695,7 @@
 
   <div id="app">
 
-    <!-- 1. AGENTS.md 필수 테스트 컨트롤 바 & 전날 이동 지원 -->
+    <!-- 1. AGENTS.md 필수 테스트 컨트롤 바 & 날짜 이동 -->
     <div class="test-control-bar">
       <div style="display:flex; align-items:center; gap:5px;">
         <span class="test-badge">AGY S3</span>
@@ -704,7 +704,6 @@
       <div class="test-btn-group">
         <button class="btn-test" onclick="handlePrevDay()" title="전날로 이동">◀️ 전날로 이동</button>
         <button class="btn-test" onclick="handleNextDay()" title="다음 날로 이동">📅 다음 날로 이동</button>
-        <button class="btn-test btn-test-reset" onclick="handleReset()" title="처음부터 다시">🔄 처음부터 다시</button>
       </div>
     </div>
 
@@ -851,6 +850,11 @@
 
     <!-- 토스트 팝업 알림 -->
     <div id="toast" class="toast-popup">즐겨찾기에 등록되었습니다.</div>
+
+    <!-- 하단 데이터 리셋 (AGENTS.md 과제 요건 충족 및 하단 분리 배치) -->
+    <div style="text-align:center; padding: 22px 0 16px;">
+      <button class="btn-footer-reset" onclick="handleReset()" style="background:none; border:none; color:#94a3b8; font-size:11px; text-decoration:underline; cursor:pointer;">🔄 처음부터 다시 (초기화)</button>
+    </div>
 
   </div>
 
@@ -1526,7 +1530,7 @@
             <div class="schedule-room">[${buildingName}] ${item.room}호 (${item.time || "수업"})</div>
           </div>
           <div class="schedule-actions">
-            <button class="btn-nav-schedule" onclick="navigateToScheduleRoom('${item.room}', '${buildingName}')">
+            <button class="btn-nav-schedule" onclick="navigateToScheduleRoom('${item.room}', '${buildingName}', true)">
               <span>🧭</span> 길안내
             </button>
             <button class="btn-edit-schedule" onclick="startEditSchedule(${item.id})" title="수업 수정">
@@ -1557,7 +1561,7 @@
     }
 
     /* 시간표 카드에서 바로 길안내 클릭 */
-    function navigateToScheduleRoom(roomId, building) {
+    function navigateToScheduleRoom(roomId, building, shouldScroll = false) {
       if (building && !building.includes("경상")) {
         showToast(`🏢 [${building} ${roomId}호] 수업입니다. (S3 경상학관 외 타 건물 이동)`);
         return;
@@ -1569,9 +1573,11 @@
           state.selectedRoomId = roomId;
           switchFloor(f);
           showToast(`🧭 오늘의 수업: [${f}층] S3-${roomId}호 길안내를 시작합니다!`);
-          const mapEl = document.getElementById("s3-svg-canvas");
-          if (mapEl) {
-            mapEl.scrollIntoView({ behavior: "smooth", block: "center" });
+          if (shouldScroll) {
+            const mapEl = document.getElementById("s3-svg-canvas");
+            if (mapEl) {
+              mapEl.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
           }
           return;
         }
@@ -1709,7 +1715,7 @@
       const todayList = state.schedules.filter(s => s.day === prevDay);
       const s3Class = todayList.find(s => !s.building || s.building.includes("경상"));
       if (s3Class) {
-        navigateToScheduleRoom(s3Class.room, s3Class.building);
+        navigateToScheduleRoom(s3Class.room, s3Class.building, false);
       } else if (todayList.length > 0) {
         showToast(`📅 ${prevDay}요일: [${todayList[0].subject}] (${todayList[0].building || "외부 건물"} 수업)`);
       } else {
@@ -1738,11 +1744,11 @@
       const nextDay = DAYS[state.currentDayIndex];
       renderTodaySchedules();
 
-      // 변경된 요일의 첫 번째 경상학관 수업으로 자동 길안내
+      // 변경된 요일의 첫 번째 경상학관 수업으로 자동 길안내 (화면 스크롤 점프 방지)
       const todayList = state.schedules.filter(s => s.day === nextDay);
       const s3Class = todayList.find(s => !s.building || s.building.includes("경상"));
       if (s3Class) {
-        navigateToScheduleRoom(s3Class.room, s3Class.building);
+        navigateToScheduleRoom(s3Class.room, s3Class.building, false);
       } else if (todayList.length > 0) {
         showToast(`📅 ${nextDay}요일: [${todayList[0].subject}] (${todayList[0].building || "외부 건물"} 수업)`);
       } else {
