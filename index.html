@@ -1671,13 +1671,27 @@
           currentDayIndex: 0,
           recents: ["404", "406"],
           favorites: ["404", "406"],
-          schedules: DEFAULT_SCHEDULES
+          schedules: JSON.parse(JSON.stringify(DEFAULT_SCHEDULES))
         };
         switchFloor(1);
         renderFavoriteChips();
         renderTodaySchedules();
         updateFloorFavBadges();
-        showToast("🔄 모든 데이터가 실제 시간표 상태로 리셋되었습니다.");
+
+        // 검색창 및 수업 등록 폼 비우기
+        const searchInput = document.getElementById("room-search-input");
+        if (searchInput) searchInput.value = "";
+        const subInput = document.getElementById("input-subject");
+        if (subInput) subInput.value = "";
+        const roomInput = document.getElementById("input-room");
+        if (roomInput) roomInput.value = "";
+        const timeInput = document.getElementById("input-time");
+        if (timeInput) timeInput.value = "";
+
+        // 화면 상단으로 스크롤 이동
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        showToast("🔄 모든 데이터가 처음 상태(월요일, 1층, 기본 시간표)로 리셋되었습니다.");
       }
     }
 
