@@ -581,6 +581,23 @@
     .btn-nav-schedule:active {
       transform: scale(0.95);
     }
+    .btn-edit-schedule {
+      background: #f0fdf4;
+      color: #16a34a;
+      border: 1px solid #bbf7d0;
+      padding: 6px 8px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      transition: background 0.15s;
+    }
+    .btn-edit-schedule:active {
+      background: #dcfce7;
+    }
     .btn-delete-schedule {
       background: #f1f5f9;
       color: #ef4444;
@@ -722,9 +739,9 @@
 
       <div id="today-schedules-container"></div>
 
-      <!-- 시간표 직접 추가 -->
-      <div class="add-schedule-box">
-        <div style="font-size:11.5px; font-weight:700; color:#475569; margin-bottom:6px;">➕ 시간표에 수업 추가하기</div>
+      <!-- 시간표 직접 추가/수정 폼 -->
+      <div class="add-schedule-box" id="schedule-form-box">
+        <div style="font-size:11.5px; font-weight:700; color:#475569; margin-bottom:6px;" id="schedule-form-title">➕ 시간표에 수업 추가하기</div>
         <div class="add-schedule-grid">
           <div class="add-schedule-row">
             <select id="input-day" class="schedule-input" style="width:85px; flex-shrink:0;">
@@ -734,14 +751,17 @@
               <option value="목">목요일</option>
               <option value="금">금요일</option>
             </select>
-            <input type="text" id="input-time" class="schedule-input" style="flex:1;" placeholder="수업 시간 (예: 10:00~12:00)">
+            <input type="text" id="input-time" class="schedule-input" style="flex:1;" placeholder="수업 시간 (예: 10:00~13:00)">
           </div>
           <div class="add-schedule-row">
             <input type="text" id="input-subject" class="schedule-input" style="flex:1;" placeholder="과목명 (예: 경제학원론)">
-            <input type="text" id="input-room" class="schedule-input" style="width:110px; flex-shrink:0;" placeholder="호수 (예: 204)">
+            <input type="text" id="input-room" class="schedule-input" style="width:110px; flex-shrink:0;" placeholder="호수 (예: 404)">
           </div>
         </div>
-        <button class="btn-submit-schedule" onclick="addSchedule()">시간표에 등록하기</button>
+        <div style="display:flex; gap:6px;">
+          <button class="btn-submit-schedule" id="btn-submit-schedule" onclick="submitScheduleForm()" style="flex:1;">시간표에 등록하기</button>
+          <button type="button" id="btn-cancel-edit" onclick="cancelEditSchedule()" style="display:none; background:#94a3b8; color:#ffffff; border:none; border-radius:8px; padding:7px 12px; font-size:12px; font-weight:700; cursor:pointer;">취소</button>
+        </div>
       </div>
     </section>
 
@@ -1509,6 +1529,9 @@
             <button class="btn-nav-schedule" onclick="navigateToScheduleRoom('${item.room}', '${buildingName}')">
               <span>🧭</span> 길안내
             </button>
+            <button class="btn-edit-schedule" onclick="startEditSchedule(${item.id})" title="수업 수정">
+              <span>✏️</span>
+            </button>
             <button class="btn-delete-schedule" onclick="deleteSchedule(${item.id})" title="시간표 삭제">
               <span>🗑️</span>
             </button>
@@ -1524,6 +1547,9 @@
       const name = target ? target.subject : "수업";
       if (confirm(`"${name}" 수업을 시간표에서 삭제하시겠습니까?`)) {
         state.schedules = state.schedules.filter(s => s.id !== scheduleId);
+        if (editingScheduleId === scheduleId) {
+          cancelEditSchedule();
+        }
         renderTodaySchedules();
         saveState();
         showToast(`🗑️ [${name}] 수업이 삭제되었습니다.`);
@@ -1553,8 +1579,53 @@
       showToast(`⚠️ S3 경상학관 내에서 ${roomId}호 평면도를 찾을 수 없습니다.`);
     }
 
-    /* 시간표 새 강의 등록 */
-    function addSchedule() {
+    /* ========================================================
+       14-1. 시간표 수정 및 추가 핸들러
+       ======================================================== */
+    let editingScheduleId = null;
+
+    /* 시간표 수정 모드 진입 */
+    function startEditSchedule(scheduleId) {
+      const item = state.schedules.find(s => s.id === scheduleId);
+      if (!item) return;
+
+      editingScheduleId = scheduleId;
+      document.getElementById("input-day").value = item.day || "월";
+      document.getElementById("input-time").value = item.time || "";
+      document.getElementById("input-subject").value = item.subject || "";
+      document.getElementById("input-room").value = item.room || "";
+
+      document.getElementById("schedule-form-title").innerHTML = `✏️ <strong>[${item.subject}]</strong> 수업 정보 수정`;
+      document.getElementById("schedule-form-title").style.color = "#0284c7";
+      const submitBtn = document.getElementById("btn-submit-schedule");
+      submitBtn.innerText = "수정 완료";
+      submitBtn.style.background = "#0284c7";
+      document.getElementById("btn-cancel-edit").style.display = "block";
+
+      const box = document.getElementById("schedule-form-box");
+      if (box) {
+        box.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      document.getElementById("input-subject").focus();
+    }
+
+    /* 시간표 수정 취소 */
+    function cancelEditSchedule() {
+      editingScheduleId = null;
+      document.getElementById("input-time").value = "";
+      document.getElementById("input-subject").value = "";
+      document.getElementById("input-room").value = "";
+
+      document.getElementById("schedule-form-title").innerText = "➕ 시간표에 수업 추가하기";
+      document.getElementById("schedule-form-title").style.color = "#475569";
+      const submitBtn = document.getElementById("btn-submit-schedule");
+      submitBtn.innerText = "시간표에 등록하기";
+      submitBtn.style.background = "#0f172a";
+      document.getElementById("btn-cancel-edit").style.display = "none";
+    }
+
+    /* 시간표 폼 제출 (추가 또는 수정 통합) */
+    function submitScheduleForm() {
       const day = document.getElementById("input-day").value;
       const time = document.getElementById("input-time").value.trim() || "시간 미정";
       const subject = document.getElementById("input-subject").value.trim();
@@ -1565,30 +1636,50 @@
         return;
       }
 
-      state.schedules.push({
-        id: Date.now(),
-        day: day,
-        time: time,
-        subject: subject,
-        room: room,
-        building: "경상학관"
-      });
+      if (editingScheduleId) {
+        // 기존 수업 정보 수정
+        const target = state.schedules.find(s => s.id === editingScheduleId);
+        if (target) {
+          target.day = day;
+          target.time = time;
+          target.subject = subject;
+          target.room = room;
+        }
 
-      // 내 수업 등록 시 해당 강의실을 즐겨찾기(고정)에 자동 추가
-      if (!state.favorites.includes(room)) {
-        state.favorites.push(room);
-        updateFloorFavBadges();
-        renderFavoriteChips();
-        renderFloorCanvas();
+        // 수정된 호실이 즐겨찾기에 없으면 자동 추가
+        if (!state.favorites.includes(room)) {
+          state.favorites.push(room);
+        }
+
+        showToast(`✅ [${subject}] 수업 정보가 수정되었습니다.`);
+        cancelEditSchedule();
+      } else {
+        // 신규 수업 추가
+        state.schedules.push({
+          id: Date.now(),
+          day: day,
+          time: time,
+          subject: subject,
+          room: room,
+          building: "경상학관"
+        });
+
+        if (!state.favorites.includes(room)) {
+          state.favorites.push(room);
+        }
+
+        document.getElementById("input-time").value = "";
+        document.getElementById("input-subject").value = "";
+        document.getElementById("input-room").value = "";
+
+        showToast(`✅ ${day}요일 [${subject}] 강의가 등록되고 즐겨찾기(⭐)에 고정되었습니다.`);
       }
 
-      document.getElementById("input-time").value = "";
-      document.getElementById("input-subject").value = "";
-      document.getElementById("input-room").value = "";
-
       renderTodaySchedules();
+      renderFavoriteChips();
+      updateFloorFavBadges();
+      renderFloorCanvas();
       saveState();
-      showToast(`✅ ${day}요일 [${subject}] 강의가 등록되고 즐겨찾기(⭐)에 고정되었습니다.`);
     }
 
     /* ========================================================
@@ -1677,6 +1768,7 @@
         renderFavoriteChips();
         renderTodaySchedules();
         updateFloorFavBadges();
+        cancelEditSchedule();
 
         // 검색창 및 수업 등록 폼 비우기
         const searchInput = document.getElementById("room-search-input");
