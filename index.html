@@ -187,33 +187,37 @@
       cursor: pointer;
     }
 
-    /* 최근 검색 칩 목록 */
-    .recent-chips-bar {
+    /* 즐겨찾기(고정) 칩 목록 */
+    .favorite-chips-bar {
       display: flex;
       gap: 6px;
       overflow-x: auto;
       padding: 8px 14px 4px;
       scrollbar-width: none;
+      align-items: center;
     }
-    .recent-chips-bar::-webkit-scrollbar {
+    .favorite-chips-bar::-webkit-scrollbar {
       display: none;
     }
-    .recent-chip {
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-      padding: 3px 8px;
+    .favorite-chip {
+      background: #fefce8;
+      border: 1px solid #fde047;
+      padding: 3px 9px;
       border-radius: 14px;
       font-size: 11px;
       font-weight: 700;
-      color: #475569;
+      color: #854d0e;
       white-space: nowrap;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 3px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+      transition: all 0.15s ease;
     }
-    .recent-chip:active {
-      background: #f1f5f9;
+    .favorite-chip:active {
+      background: #fef08a;
+      transform: scale(0.96);
     }
 
     /* ========================================================
@@ -701,8 +705,8 @@
       </div>
     </header>
 
-    <!-- 최근 찾은 강의실 칩 -->
-    <div class="recent-chips-bar" id="recent-chips-container"></div>
+    <!-- 즐겨찾기(고정) 강의실 칩 목록 -->
+    <div class="favorite-chips-bar" id="favorite-chips-container"></div>
 
     <!-- 3. 오늘의 수업 시간표 카드 & 시간표 등록 (상단 우선 배치) -->
     <section class="timetable-section" style="margin-top: 6px; margin-bottom: 10px;">
@@ -1287,16 +1291,8 @@
 
     function handleSelectRoom(roomId) {
       state.selectedRoomId = roomId;
-
-      // 최근 본 호실에 추가 (최대 5개)
-      if (!state.recents.includes(roomId)) {
-        state.recents.unshift(roomId);
-        if (state.recents.length > 5) state.recents.pop();
-      }
-
       renderFloorCanvas();
       updateDirectionGuide();
-      renderRecentChips();
       saveState();
     }
 
@@ -1360,6 +1356,7 @@
       updateDirectionGuide();
       renderFloorCanvas();
       updateFloorFavBadges();
+      renderFavoriteChips();
       saveState();
     }
 
@@ -1385,20 +1382,32 @@
       }
     }
 
-    /* 최근 검색 칩 렌더링 */
-    function renderRecentChips() {
-      const container = document.getElementById("recent-chips-container");
+    /* 즐겨찾기(고정) 칩 렌더링 - 고정핀과 즐겨찾기 완전 동기화 */
+    function renderFavoriteChips() {
+      const container = document.getElementById("favorite-chips-container") || document.getElementById("recent-chips-container");
+      if (!container) return;
       container.innerHTML = "";
-      state.recents.forEach(roomId => {
+
+      if (state.favorites.length === 0) {
+        container.innerHTML = `
+          <div style="font-size:11px; color:#94a3b8; padding:3px 2px;">
+            ⭐ 강의실을 선택하고 ★를 누르면 여기에 즐겨찾기 칩이 고정됩니다.
+          </div>
+        `;
+        return;
+      }
+
+      state.favorites.forEach(roomId => {
         const chip = document.createElement("button");
-        chip.className = "recent-chip";
-        chip.innerHTML = `<span>📌</span> S3-${roomId}호`;
+        chip.className = "favorite-chip";
+        chip.innerHTML = `<span>⭐</span> S3-${roomId}호`;
         chip.onclick = () => {
-          // 해당 층 찾아 전환
+          // 해당 층 찾아 전환 및 길안내
           for (let f = 1; f <= 7; f++) {
             if (S3_FLOORS_DATA[f].rooms.some(r => r.id === roomId)) {
               state.selectedRoomId = roomId;
               switchFloor(f);
+              showToast(`⭐ 즐겨찾기: [${f}층] S3-${roomId}호로 이동합니다.`);
               break;
             }
           }
@@ -1543,7 +1552,7 @@
           schedules: DEFAULT_SCHEDULES
         };
         switchFloor(1);
-        renderRecentChips();
+        renderFavoriteChips();
         renderTodaySchedules();
         updateFloorFavBadges();
         showToast("🔄 모든 데이터가 초기 상태로 리셋되었습니다.");
@@ -1564,7 +1573,7 @@
     window.onload = () => {
       loadState();
       switchFloor(state.currentFloor);
-      renderRecentChips();
+      renderFavoriteChips();
       renderTodaySchedules();
       updateFloorFavBadges();
       document.getElementById("start-loc-select").value = state.startLoc;
