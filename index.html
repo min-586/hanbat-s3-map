@@ -69,7 +69,7 @@
     .test-control-bar {
       background-color: #0f172a;
       color: #f8fafc;
-      padding: 8px 12px;
+      padding: 6px 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -81,27 +81,29 @@
     .test-badge {
       background: #0284c7;
       color: #fff;
-      padding: 2px 6px;
+      padding: 2px 5px;
       border-radius: 4px;
       font-size: 10px;
       font-weight: 800;
     }
     .test-btn-group {
       display: flex;
-      gap: 6px;
+      gap: 4px;
+      align-items: center;
     }
     .btn-test {
       background: #0369a1;
       color: #ffffff;
       border: none;
-      padding: 4px 8px;
+      padding: 4px 6px;
       border-radius: 6px;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 3px;
+      gap: 2px;
+      white-space: nowrap;
     }
     .btn-test:active {
       transform: scale(0.95);
@@ -676,15 +678,16 @@
 
   <div id="app">
 
-    <!-- 1. AGENTS.md 필수 테스트 컨트롤 바 -->
+    <!-- 1. AGENTS.md 필수 테스트 컨트롤 바 & 전날 이동 지원 -->
     <div class="test-control-bar">
-      <div style="display:flex; align-items:center; gap:6px;">
+      <div style="display:flex; align-items:center; gap:5px;">
         <span class="test-badge">AGY S3</span>
-        <span id="test-day-display">월요일 수업 모드</span>
+        <span id="test-day-display">월요일 모드</span>
       </div>
       <div class="test-btn-group">
-        <button class="btn-test" onclick="handleNextDay()">📅 다음 날로 이동</button>
-        <button class="btn-test btn-test-reset" onclick="handleReset()">🔄 처음부터 다시</button>
+        <button class="btn-test" onclick="handlePrevDay()" title="전날로 이동">◀️ 전날로 이동</button>
+        <button class="btn-test" onclick="handleNextDay()" title="다음 날로 이동">📅 다음 날로 이동</button>
+        <button class="btn-test btn-test-reset" onclick="handleReset()" title="처음부터 다시">🔄 처음부터 다시</button>
       </div>
     </div>
 
@@ -1589,8 +1592,41 @@
     }
 
     /* ========================================================
-       15. AGENTS.md 필수 테스트 버튼 핸들러
+       15. AGENTS.md 필수 테스트 버튼 핸들러 & 날짜 이동
        ======================================================== */
+    // 0. 전날로 이동
+    function handlePrevDay() {
+      // 주말(토, 일)에 수업이 없으면 주말은 자동으로 건너뛰고 평일로 바로 역순환
+      let prevIndex = (state.currentDayIndex - 1 + 7) % 7;
+
+      for (let i = 0; i < 7; i++) {
+        const dayName = DAYS[prevIndex];
+        const isWeekend = dayName === "토" || dayName === "일";
+        const hasWeekendClass = state.schedules.some(s => s.day === dayName);
+
+        if (!isWeekend || hasWeekendClass) {
+          break; // 평일이거나 주말 수업이 있으면 해당 요일로 결정
+        }
+        prevIndex = (prevIndex - 1 + 7) % 7; // 주말에 수업이 없으면 건너뜀
+      }
+
+      state.currentDayIndex = prevIndex;
+      const prevDay = DAYS[state.currentDayIndex];
+      renderTodaySchedules();
+
+      // 변경된 요일의 첫 번째 경상학관 수업으로 자동 길안내
+      const todayList = state.schedules.filter(s => s.day === prevDay);
+      const s3Class = todayList.find(s => !s.building || s.building.includes("경상"));
+      if (s3Class) {
+        navigateToScheduleRoom(s3Class.room, s3Class.building);
+      } else if (todayList.length > 0) {
+        showToast(`📅 ${prevDay}요일: [${todayList[0].subject}] (${todayList[0].building || "외부 건물"} 수업)`);
+      } else {
+        showToast(`📅 ${prevDay}요일로 이동했습니다. (등록된 수업 없음 - 공강 🎉)`);
+      }
+      saveState();
+    }
+
     // 1. 다음 날로 이동
     function handleNextDay() {
       // 주말(토, 일)에 수업이 없으면 주말은 자동으로 건너뛰고 평일로 바로 순환
