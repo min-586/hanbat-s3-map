@@ -1098,6 +1098,12 @@
           }
         });
       }
+
+      // 주말에 수업이 없으면 기본 요일을 평일(월요일)로 유지
+      const curDay = DAYS[state.currentDayIndex];
+      if ((curDay === "토" || curDay === "일") && !state.schedules.some(s => s.day === curDay)) {
+        state.currentDayIndex = 0;
+      }
     }
 
     // 로컬스토리지 저장
@@ -1587,7 +1593,21 @@
        ======================================================== */
     // 1. 다음 날로 이동
     function handleNextDay() {
-      state.currentDayIndex = (state.currentDayIndex + 1) % 7;
+      // 주말(토, 일)에 수업이 없으면 주말은 자동으로 건너뛰고 평일로 바로 순환
+      let nextIndex = (state.currentDayIndex + 1) % 7;
+
+      for (let i = 0; i < 7; i++) {
+        const dayName = DAYS[nextIndex];
+        const isWeekend = dayName === "토" || dayName === "일";
+        const hasWeekendClass = state.schedules.some(s => s.day === dayName);
+
+        if (!isWeekend || hasWeekendClass) {
+          break; // 평일이거나 주말 수업이 있으면 해당 요일로 결정
+        }
+        nextIndex = (nextIndex + 1) % 7; // 주말에 수업이 없으면 건너뜀
+      }
+
+      state.currentDayIndex = nextIndex;
       const nextDay = DAYS[state.currentDayIndex];
       renderTodaySchedules();
 
