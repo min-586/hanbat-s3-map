@@ -1063,8 +1063,8 @@
       selectedRoomId: null, // 초기에는 호실 선택 없이 순수 평면도만 표시
       startLoc: "EV", // EV, MID_STAIR, RIGHT_STAIR, MAIN_GATE
       currentDayIndex: 0, // 0:월 ~ 6:일
-      recents: ["301", "204", "108"],
-      favorites: ["301"],
+      recents: ["301", "204", "201", "304", "108"],
+      favorites: ["301", "204", "201", "304", "108"], // 내 수업이 있는 모든 강의실 기본 즐겨찾기(고정)
       schedules: DEFAULT_SCHEDULES
     };
 
@@ -1078,6 +1078,15 @@
         }
       } catch (e) {
         console.error("저장소 로드 오류", e);
+      }
+
+      // 수업이 있는 모든 강의실을 즐겨찾기에 자동 동기화 (즐겨찾기 = 고정핀 역할)
+      if (state.schedules && state.schedules.length > 0) {
+        state.schedules.forEach(s => {
+          if (s.room && !state.favorites.includes(s.room)) {
+            state.favorites.push(s.room);
+          }
+        });
       }
     }
 
@@ -1510,13 +1519,21 @@
         room: room
       });
 
+      // 내 수업 등록 시 해당 강의실을 즐겨찾기(고정)에 자동 추가
+      if (!state.favorites.includes(room)) {
+        state.favorites.push(room);
+        updateFloorFavBadges();
+        renderFavoriteChips();
+        renderFloorCanvas();
+      }
+
       document.getElementById("input-time").value = "";
       document.getElementById("input-subject").value = "";
       document.getElementById("input-room").value = "";
 
       renderTodaySchedules();
       saveState();
-      showToast(`✅ ${day}요일 [${subject}] 강의가 등록되었습니다.`);
+      showToast(`✅ ${day}요일 [${subject}] 강의가 등록되고 즐겨찾기(⭐)에 고정되었습니다.`);
     }
 
     /* ========================================================
@@ -1547,8 +1564,8 @@
           selectedRoomId: null, // 초기에는 호실 선택 없이 순수 평면도만 표시
           startLoc: "EV",
           currentDayIndex: 0,
-          recents: ["301", "204", "108"],
-          favorites: ["301"],
+          recents: ["301", "204", "201", "304", "108"],
+          favorites: ["301", "204", "201", "304", "108"],
           schedules: DEFAULT_SCHEDULES
         };
         switchFloor(1);
