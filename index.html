@@ -1044,13 +1044,15 @@
       }
     };
 
-    /* 기본 샘플 시간표 */
+    /* 실제 사용자 시간표 (2026년 2학기 에브리타임 시간표) */
     const DEFAULT_SCHEDULES = [
-      { id: 1, day: "월", time: "10:00~12:00", subject: "경영학원론", room: "301" },
-      { id: 2, day: "월", time: "14:00~16:00", subject: "회계정보실습", room: "204" },
-      { id: 3, day: "화", time: "11:00~13:00", subject: "미시경제학", room: "201" },
-      { id: 4, day: "수", time: "13:00~15:00", subject: "마케팅관리", room: "304" },
-      { id: 5, day: "목", time: "10:00~12:00", subject: "대학세미나", room: "108" }
+      { id: 1, day: "월", time: "10:00~13:00", subject: "MIS 611", room: "406", building: "경상학관" },
+      { id: 2, day: "화", time: "10:00~13:00", subject: "나눔의 교육", room: "403", building: "인문사회과학관" },
+      { id: 3, day: "화", time: "14:00~17:00", subject: "거시경제학", room: "404", building: "경상학관" },
+      { id: 4, day: "목", time: "10:00~12:00", subject: "거시경제의 이해", room: "404", building: "경상학관" },
+      { id: 5, day: "목", time: "14:00~17:00", subject: "통계로 보는 세상", room: "609", building: "그린에너지관" },
+      { id: 6, day: "금", time: "09:00~12:00", subject: "경제사", room: "404", building: "경상학관" },
+      { id: 7, day: "금", time: "15:00~17:00", subject: "거시경제의 이해", room: "404", building: "경상학관" }
     ];
 
     /* ========================================================
@@ -1063,8 +1065,8 @@
       selectedRoomId: null, // 초기에는 호실 선택 없이 순수 평면도만 표시
       startLoc: "EV", // EV, MID_STAIR, RIGHT_STAIR, MAIN_GATE
       currentDayIndex: 0, // 0:월 ~ 6:일
-      recents: ["301", "204", "201", "304", "108"],
-      favorites: ["301", "204", "201", "304", "108"], // 내 수업이 있는 모든 강의실 기본 즐겨찾기(고정)
+      recents: ["404", "406"],
+      favorites: ["404", "406"], // 내 수업이 있는 경상학관 강의실 기본 즐겨찾기(고정)
       schedules: DEFAULT_SCHEDULES
     };
 
@@ -1080,10 +1082,18 @@
         console.error("저장소 로드 오류", e);
       }
 
-      // 수업이 있는 모든 강의실을 즐겨찾기에 자동 동기화 (즐겨찾기 = 고정핀 역할)
+      // 이전 더미 샘플 시간표가 저장되어 있을 경우 실제 시간표로 자동 업데이트
+      if (state.schedules && state.schedules.some(s => s.subject === "경영학원론" || s.subject === "회계정보실습")) {
+        state.schedules = DEFAULT_SCHEDULES;
+        state.favorites = ["404", "406"];
+        saveState();
+      }
+
+      // 수업이 있는 경상학관 강의실을 즐겨찾기에 자동 동기화 (즐겨찾기 = 고정핀 역할)
       if (state.schedules && state.schedules.length > 0) {
         state.schedules.forEach(s => {
-          if (s.room && !state.favorites.includes(s.room)) {
+          const building = s.building || "경상학관";
+          if (building.includes("경상") && s.room && !state.favorites.includes(s.room)) {
             state.favorites.push(s.room);
           }
         });
@@ -1480,13 +1490,14 @@
       todayList.forEach(item => {
         const div = document.createElement("div");
         div.className = "schedule-card";
+        const buildingName = item.building || "경상학관";
         div.innerHTML = `
           <div class="schedule-info">
             <div class="schedule-subject">${item.subject}</div>
-            <div class="schedule-room">[S3 경상학관] ${item.room}호 (${item.time || "수업"})</div>
+            <div class="schedule-room">[${buildingName}] ${item.room}호 (${item.time || "수업"})</div>
           </div>
           <div class="schedule-actions">
-            <button class="btn-nav-schedule" onclick="navigateToScheduleRoom('${item.room}')">
+            <button class="btn-nav-schedule" onclick="navigateToScheduleRoom('${item.room}', '${buildingName}')">
               <span>🧭</span> 길안내
             </button>
             <button class="btn-delete-schedule" onclick="deleteSchedule(${item.id})" title="시간표 삭제">
@@ -1511,13 +1522,18 @@
     }
 
     /* 시간표 카드에서 바로 길안내 클릭 */
-    function navigateToScheduleRoom(roomId) {
+    function navigateToScheduleRoom(roomId, building) {
+      if (building && !building.includes("경상")) {
+        showToast(`🏢 [${building} ${roomId}호] 수업입니다. (S3 경상학관 외 타 건물 이동)`);
+        return;
+      }
+
       for (let f = 1; f <= 7; f++) {
         const match = S3_FLOORS_DATA[f].rooms.find(r => r.id === roomId);
         if (match) {
           state.selectedRoomId = roomId;
           switchFloor(f);
-          showToast(`🧭 오늘의 수업: [${f}층] ${roomId}호 길안내를 시작합니다!`);
+          showToast(`🧭 오늘의 수업: [${f}층] S3-${roomId}호 길안내를 시작합니다!`);
           const mapEl = document.getElementById("s3-svg-canvas");
           if (mapEl) {
             mapEl.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -1525,7 +1541,7 @@
           return;
         }
       }
-      showToast(`⚠️ ${roomId}호 평면도를 찾을 수 없습니다.`);
+      showToast(`⚠️ S3 경상학관 내에서 ${roomId}호 평면도를 찾을 수 없습니다.`);
     }
 
     /* 시간표 새 강의 등록 */
@@ -1545,7 +1561,8 @@
         day: day,
         time: time,
         subject: subject,
-        room: room
+        room: room,
+        building: "경상학관"
       });
 
       // 내 수업 등록 시 해당 강의실을 즐겨찾기(고정)에 자동 추가
@@ -1574,12 +1591,15 @@
       const nextDay = DAYS[state.currentDayIndex];
       renderTodaySchedules();
 
-      // 변경된 요일의 첫 번째 수업으로 자동 길안내
+      // 변경된 요일의 첫 번째 경상학관 수업으로 자동 길안내
       const todayList = state.schedules.filter(s => s.day === nextDay);
-      if (todayList.length > 0) {
-        navigateToScheduleRoom(todayList[0].room);
+      const s3Class = todayList.find(s => !s.building || s.building.includes("경상"));
+      if (s3Class) {
+        navigateToScheduleRoom(s3Class.room, s3Class.building);
+      } else if (todayList.length > 0) {
+        showToast(`📅 ${nextDay}요일: [${todayList[0].subject}] (${todayList[0].building || "외부 건물"} 수업)`);
       } else {
-        showToast(`📅 ${nextDay}요일로 이동했습니다. (등록된 수업 없음)`);
+        showToast(`📅 ${nextDay}요일로 이동했습니다. (등록된 수업 없음 - 공강 🎉)`);
       }
       saveState();
     }
@@ -1593,15 +1613,15 @@
           selectedRoomId: null, // 초기에는 호실 선택 없이 순수 평면도만 표시
           startLoc: "EV",
           currentDayIndex: 0,
-          recents: ["301", "204", "201", "304", "108"],
-          favorites: ["301", "204", "201", "304", "108"],
+          recents: ["404", "406"],
+          favorites: ["404", "406"],
           schedules: DEFAULT_SCHEDULES
         };
         switchFloor(1);
         renderFavoriteChips();
         renderTodaySchedules();
         updateFloorFavBadges();
-        showToast("🔄 모든 데이터가 초기 상태로 리셋되었습니다.");
+        showToast("🔄 모든 데이터가 실제 시간표 상태로 리셋되었습니다.");
       }
     }
 
