@@ -88,14 +88,15 @@
     }
     .test-btn-group {
       display: flex;
-      gap: 4px;
+      gap: 3px;
       align-items: center;
+      flex-shrink: 0;
     }
     .btn-test {
       background: #0369a1;
       color: #ffffff;
       border: none;
-      padding: 4px 6px;
+      padding: 3px 6px;
       border-radius: 6px;
       font-size: 10px;
       font-weight: 700;
@@ -107,6 +108,12 @@
     }
     .btn-test:active {
       transform: scale(0.95);
+    }
+    .btn-test-today {
+      background: #059669;
+    }
+    .btn-test-today:active {
+      background: #047857;
     }
     .btn-test-reset {
       background: #dc2626;
@@ -697,13 +704,14 @@
 
     <!-- 1. AGENTS.md 필수 테스트 컨트롤 바 & 날짜 이동 -->
     <div class="test-control-bar">
-      <div style="display:flex; align-items:center; gap:5px;">
+      <div style="display:flex; align-items:center; gap:5px; min-width:0;">
         <span class="test-badge">AGY S3</span>
-        <span id="test-day-display">월요일 모드</span>
+        <span id="test-day-display" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">오늘 감지 중</span>
       </div>
       <div class="test-btn-group">
-        <button class="btn-test" onclick="handlePrevDay()" title="전날로 이동">◀️ 전날로 이동</button>
-        <button class="btn-test" onclick="handleNextDay()" title="다음 날로 이동">📅 다음 날로 이동</button>
+        <button class="btn-test" onclick="handlePrevDay()" title="전날로 이동">◀️ 전날</button>
+        <button class="btn-test" onclick="handleNextDay()" title="다음 날로 이동">다음날 📅</button>
+        <button class="btn-test btn-test-today" onclick="handleGoToToday()" title="실제 오늘 요일로 바로 이동">📍 오늘</button>
       </div>
     </div>
 
@@ -712,7 +720,7 @@
       <div class="header-title-row">
         <div>
           <div class="app-title">🏢 S3 경상학관 층별 길잡이</div>
-          <div class="app-sub">한밭대학교 전공건물 실내 내비게이션</div>
+          <div class="app-sub" id="header-date-sub">한밭대학교 전공건물 실내 내비게이션</div>
         </div>
         <div class="today-pill" id="today-badge">월요일</div>
       </div>
@@ -1497,13 +1505,44 @@
       });
     }
 
+    /* 실제 기기 기준 오늘 요일 인덱스 (0: 월 ~ 6: 일) */
+    function getRealTodayIndex() {
+      const day = new Date().getDay(); // 0: 일, 1: 월, 2: 화, 3: 수, 4: 목, 5: 금, 6: 토
+      return day === 0 ? 6 : day - 1;
+    }
+
     /* ========================================================
        14. 오늘 수업 시간표 렌더링 & 길안내 연동
        ======================================================== */
     function renderTodaySchedules() {
+      const realIdx = getRealTodayIndex();
       const currentDay = DAYS[state.currentDayIndex];
-      document.getElementById("today-badge").innerText = `${currentDay}요일`;
-      document.getElementById("test-day-display").innerText = `${currentDay}요일 수업 모드`;
+      const isRealToday = state.currentDayIndex === realIdx;
+
+      // 상단 날짜 및 요일 배지 업데이트
+      const now = new Date();
+      const dateSub = document.getElementById("header-date-sub");
+      if (dateSub) {
+        dateSub.innerText = `한밭대 실내 내비게이션 • ${now.getMonth() + 1}월 ${now.getDate()}일 기준`;
+      }
+
+      const todayBadge = document.getElementById("today-badge");
+      if (todayBadge) {
+        if (isRealToday) {
+          todayBadge.innerHTML = `<strong>${currentDay}요일</strong> <span style="background:#2563eb; color:#fff; border-radius:8px; padding:1px 5px; font-size:9.5px; margin-left:3px;">오늘</span>`;
+          todayBadge.style.background = "#dbeafe";
+          todayBadge.style.color = "#1e40af";
+        } else {
+          todayBadge.innerHTML = `${currentDay}요일 <span style="font-size:9.5px; color:#64748b; margin-left:2px;">(탐색)</span>`;
+          todayBadge.style.background = "#f1f5f9";
+          todayBadge.style.color = "#475569";
+        }
+      }
+
+      const testDayDisplay = document.getElementById("test-day-display");
+      if (testDayDisplay) {
+        testDayDisplay.innerText = isRealToday ? `${currentDay}요일 (오늘)` : `${currentDay}요일 (탐색 중)`;
+      }
 
       const container = document.getElementById("today-schedules-container");
       container.innerHTML = "";
@@ -1512,9 +1551,12 @@
       document.getElementById("today-schedule-count").innerText = `${todayList.length}개 강의`;
 
       if (todayList.length === 0) {
+        const isWeekend = currentDay === "토" || currentDay === "일";
         container.innerHTML = `
           <div style="text-align:center; padding:18px 0; color:#94a3b8; font-size:12.5px;">
-            ☕ 오늘(${currentDay}요일)은 등록된 수업이 없습니다.<br>평면도에서 자유롭게 강의실을 찾아보세요!
+            ${isWeekend ? "☕ 즐거운 주말입니다! 등록된 주말 수업이 없습니다." : `☕ 오늘(${currentDay}요일)은 등록된 수업이 없습니다.`}<br>
+            평면도에서 자유롭게 강의실을 찾아보세요!
+            ${isWeekend ? '<br><button onclick="handleGoToMonday()" style="margin-top:10px; padding:6px 14px; background:#2563eb; color:#fff; border:none; border-radius:8px; font-size:11.5px; font-weight:700; cursor:pointer;">다가오는 월요일 수업 보기 🗓️</button>' : ''}
           </div>
         `;
         return;
@@ -1691,8 +1733,41 @@
     /* ========================================================
        15. AGENTS.md 필수 테스트 버튼 핸들러 & 날짜 이동
        ======================================================== */
-    // 0. 전날로 이동
+    // 0. 실제 오늘 요일로 바로 이동
+    function handleGoToToday() {
+      sessionStorage.removeItem("s3_user_has_navigated_day");
+      const realIdx = getRealTodayIndex();
+      state.currentDayIndex = realIdx;
+      const todayName = DAYS[realIdx];
+      renderTodaySchedules();
+
+      // 오늘 요일의 첫 번째 경상학관 수업으로 이동
+      const todayList = state.schedules.filter(s => s.day === todayName);
+      const s3Class = todayList.find(s => !s.building || s.building.includes("경상"));
+      if (s3Class) {
+        navigateToScheduleRoom(s3Class.room, s3Class.building, false);
+      }
+      saveState();
+      showToast(`📍 실제 오늘 요일인 [${todayName}요일] 시간표로 이동했습니다!`);
+    }
+
+    // 다가오는 월요일로 이동
+    function handleGoToMonday() {
+      sessionStorage.setItem("s3_user_has_navigated_day", "true");
+      state.currentDayIndex = 0;
+      renderTodaySchedules();
+      const todayList = state.schedules.filter(s => s.day === "월");
+      const s3Class = todayList.find(s => !s.building || s.building.includes("경상"));
+      if (s3Class) {
+        navigateToScheduleRoom(s3Class.room, s3Class.building, false);
+      }
+      saveState();
+      showToast("📅 다가오는 월요일 시간표로 이동했습니다.");
+    }
+
+    // 1. 전날로 이동
     function handlePrevDay() {
+      sessionStorage.setItem("s3_user_has_navigated_day", "true");
       // 주말(토, 일)에 수업이 없으면 주말은 자동으로 건너뛰고 평일로 바로 역순환
       let prevIndex = (state.currentDayIndex - 1 + 7) % 7;
 
@@ -1724,8 +1799,9 @@
       saveState();
     }
 
-    // 1. 다음 날로 이동
+    // 2. 다음 날로 이동
     function handleNextDay() {
+      sessionStorage.setItem("s3_user_has_navigated_day", "true");
       // 주말(토, 일)에 수업이 없으면 주말은 자동으로 건너뛰고 평일로 바로 순환
       let nextIndex = (state.currentDayIndex + 1) % 7;
 
@@ -1757,15 +1833,16 @@
       saveState();
     }
 
-    // 2. 처음부터 다시 (초기화)
+    // 3. 처음부터 다시 (초기화)
     function handleReset() {
       if (confirm("저장된 모든 데이터를 지우고 처음 상태로 돌아가시겠습니까?")) {
+        sessionStorage.removeItem("s3_user_has_navigated_day");
         localStorage.removeItem(STORAGE_KEY);
         state = {
           currentFloor: 1,
           selectedRoomId: null, // 초기에는 호실 선택 없이 순수 평면도만 표시
           startLoc: "EV",
-          currentDayIndex: 0,
+          currentDayIndex: getRealTodayIndex(),
           recents: ["404", "406"],
           favorites: ["404", "406"],
           schedules: JSON.parse(JSON.stringify(DEFAULT_SCHEDULES))
@@ -1789,7 +1866,7 @@
         // 화면 상단으로 스크롤 이동
         window.scrollTo({ top: 0, behavior: "smooth" });
 
-        showToast("🔄 모든 데이터가 처음 상태(월요일, 1층, 기본 시간표)로 리셋되었습니다.");
+        showToast("🔄 모든 데이터가 처음 상태로 리셋되었습니다.");
       }
     }
 
@@ -1806,6 +1883,26 @@
     /* 앱 기동 */
     window.onload = () => {
       loadState();
+
+      // 세션에서 사용자가 직접 날짜 이동 버튼을 누른 상태가 아니면 실제 오늘 요일로 시작
+      if (sessionStorage.getItem("s3_user_has_navigated_day") !== "true") {
+        state.currentDayIndex = getRealTodayIndex();
+      }
+
+      // 오늘 요일에 경상학관 수업이 있고 호실이 미선택 상태면 당일 첫 수업 자동 포커스
+      const curDayName = DAYS[state.currentDayIndex];
+      const todayList = state.schedules.filter(s => s.day === curDayName);
+      const s3Class = todayList.find(s => !s.building || s.building.includes("경상"));
+      if (s3Class && !state.selectedRoomId) {
+        state.selectedRoomId = s3Class.room;
+        for (let f = 1; f <= 7; f++) {
+          if (S3_FLOORS_DATA[f].rooms.some(r => r.id === s3Class.room)) {
+            state.currentFloor = f;
+            break;
+          }
+        }
+      }
+
       switchFloor(state.currentFloor);
       renderFavoriteChips();
       renderTodaySchedules();
